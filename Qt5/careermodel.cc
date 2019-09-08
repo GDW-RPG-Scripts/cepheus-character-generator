@@ -20,19 +20,12 @@
  * Character Generator. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "die.hh"
-
-#include <cstdlib>
+#include "careermodel.hh"
 
 using namespace Cepheus::Character;
 
-int
-Die::Roll(int number)
+CareerModel::CareerModel(QObject* parent)
+  : QAbstractTableModel(parent)
 {
-  int result = 0;
 
-  for(int i = 0; i < number; i++)
-    result += rand() % 6 + 1;
-
-  return result;
 }

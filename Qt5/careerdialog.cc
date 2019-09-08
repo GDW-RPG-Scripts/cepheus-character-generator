@@ -1,200 +1,88 @@
 /**
- * Cepheus Character Generator, a character generator for the Cepheus Engine
- * and derived RPG systems.
+ * Cepheus Character Generator, an RPG character generator for the Cepheus
+ * Engine and derived RPG systems.
  *
- * Copyright (C) 2019 Michael N. Henry
+ * Copyright (C) 2019 Michael N. Henry <mike.henry@mikehenry.se>
  *
  * This file is part of the Cepheus Character Generator.
  *
- * GDW RPG Vehicles is free software: you can redistribute it and/or modify it under the terms of the
- * GNU General Public License as published by the Free Software Foundation, either version 2 of the
- * License, or (at your option) any later version.
+ * Cepheus Character Generator is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or (at your
+ * option) any later version.
  *
- * GDW RPG Vehicles is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * Cepheus Character Generator is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * See the GNU General Public License for more details. You should have received a copy of the GNU
- * General Public License along with GDW RPG Vehicles. If not, see <http://www.gnu.org/licenses/>.
+ * See the GNU General Public License for more details. You should have
+ * received a copy of the GNU General Public License along with Cepheus
+ * Character Generator. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "careerdialog.hh"
 #include "ui_careerdialog.h"
 
-#include <QStandardItemModel>
+#include "career.hh"
+#include "workspace.hh"
+
 #include <QStringList>
 
-using namespace GDW::RPG;
+#include <QDebug>
 
-CareerDialog::CareerDialog(QWidget *parent) :
-  QDialog(parent),
-  mUi(new Ui::CareerDialog)
+using namespace Cepheus::Character;
+
+CareerDialog::CareerDialog(Workspace* workspace) :
+  QDialog(workspace),
+  mUi(new Ui::CareerDialog), mModel(this)
 {
   mUi->setupUi(this);
-
-  QStandardItemModel* model = new QStandardItemModel(this);
 
   static const QStringList HEADERS = {
     tr("Career"),
     tr("Qualification"),
     tr("Survival"),
-    tr("Position"),
-    tr("Promotion")
+    tr("Commission"),
+    tr("Advancement"),
+    tr("Match")
   };
 
-  model->setHorizontalHeaderLabels(HEADERS);
+  mModel.setHorizontalHeaderLabels(HEADERS);
 
-  std::vector<QList<QStandardItem*> > CAREERS =
-  {{
-     new QStandardItem(tr("Aerospace Defense")),
-     new QStandardItem(tr("End 5+")),
-     new QStandardItem(tr("Dex 5+")),
-     new QStandardItem(tr("Edu 6+")),
-     new QStandardItem(tr("Edu 7+"))
-   }, {
-     new QStandardItem(tr("Agent")),
-     new QStandardItem(tr("Soc 6+")),
-     new QStandardItem(tr("Int 6+")),
-     new QStandardItem(tr("Edu 7+")),
-     new QStandardItem(tr("Edu 6+"))
-   }, {
-     new QStandardItem(tr("Athlete")),
-     new QStandardItem(tr("End 8+")),
-     new QStandardItem(tr("Dex 5+")),
-     new QStandardItem(tr("--")),
-     new QStandardItem(tr("--"))
-   }, {
-     new QStandardItem(tr("Barbarian")),
-     new QStandardItem(tr("End 5+")),
-     new QStandardItem(tr("Str 6+")),
-     new QStandardItem(tr("--")),
-     new QStandardItem(tr("--"))
-   }, {
-     new QStandardItem(tr("Belter")),
-     new QStandardItem(tr("Int 4+")),
-     new QStandardItem(tr("Dex 7+")),
-     new QStandardItem(tr("--")),
-     new QStandardItem(tr("--"))
-   }, {
-     new QStandardItem(tr("Bureaucrat")),
-     new QStandardItem(tr("Soc 6+")),
-     new QStandardItem(tr("Edu 4+")),
-     new QStandardItem(tr("Soc 5+")),
-     new QStandardItem(tr("Int 8+"))
-   }, {
-     new QStandardItem(tr("Colonist")),
-     new QStandardItem(tr("End 5+")),
-     new QStandardItem(tr("End 6+")),
-     new QStandardItem(tr("Int 7+")),
-     new QStandardItem(tr("Edu 6+"))
-   }, {
-     new QStandardItem(tr("Diplomat")),
-     new QStandardItem(tr("Soc 6+")),
-     new QStandardItem(tr("Edu 5+")),
-     new QStandardItem(tr("Int 7+")),
-     new QStandardItem(tr("Soc 7+"))
-   }, {
-     new QStandardItem(tr("Drifter")),
-     new QStandardItem(tr("Dex 5+")),
-     new QStandardItem(tr("End 5+")),
-     new QStandardItem(tr("--")),
-     new QStandardItem(tr("--"))
-   }, {
-     new QStandardItem(tr("Entertainer")),
-     new QStandardItem(tr("Soc 8+")),
-     new QStandardItem(tr("Int 4+")),
-     new QStandardItem(tr("--")),
-     new QStandardItem(tr("--"))
-   }, {
-     new QStandardItem(tr("Hunter")),
-     new QStandardItem(tr("End 5+")),
-     new QStandardItem(tr("Str 8+")),
-     new QStandardItem(tr("--")),
-     new QStandardItem(tr("--"))
-   }, {
-     new QStandardItem(tr("Marine")),
-     new QStandardItem(tr("Int 6+")),
-     new QStandardItem(tr("End 6+")),
-     new QStandardItem(tr("Edu 6+")),
-     new QStandardItem(tr("Soc 7+"))
-   }, {
-     new QStandardItem(tr("Maritime Defense")),
-     new QStandardItem(tr("End 5+")),
-     new QStandardItem(tr("End 5+")),
-     new QStandardItem(tr("Int 6+")),
-     new QStandardItem(tr("Edu 7+"))
-   }, {
-     new QStandardItem(tr("Mercenary")),
-     new QStandardItem(tr("Int 4+")),
-     new QStandardItem(tr("End 6+")),
-     new QStandardItem(tr("Int 7+")),
-     new QStandardItem(tr("Int 6+"))
-   }, {
-     new QStandardItem(tr("Merchant")),
-     new QStandardItem(tr("Int 4+")),
-     new QStandardItem(tr("Int 5+")),
-     new QStandardItem(tr("Int 5+")),
-     new QStandardItem(tr("Edu 8+"))
-   }, {
-     new QStandardItem(tr("Navy")),
-     new QStandardItem(tr("Int 6+")),
-     new QStandardItem(tr("Int 5+")),
-     new QStandardItem(tr("Soc 7+")),
-     new QStandardItem(tr("Edu 6+"))
-   }, {
-     new QStandardItem(tr("Noble")),
-     new QStandardItem(tr("Soc 8+")),
-     new QStandardItem(tr("Soc 4+")),
-     new QStandardItem(tr("Edu 5+")),
-     new QStandardItem(tr("Int 8+"))
-   }, {
-     new QStandardItem(tr("Physician")),
-     new QStandardItem(tr("Edu 6+")),
-     new QStandardItem(tr("Int 4+")),
-     new QStandardItem(tr("Int 5+")),
-     new QStandardItem(tr("Edu 8+"))
-   }, {
-     new QStandardItem(tr("Pirate")),
-     new QStandardItem(tr("Dex 5+")),
-     new QStandardItem(tr("Dex 6+")),
-     new QStandardItem(tr("Str 7+")),
-     new QStandardItem(tr("Int 6+"))
-   }, {
-     new QStandardItem(tr("Rogue")),
-     new QStandardItem(tr("Dex 5+")),
-     new QStandardItem(tr("Dex 4+")),
-     new QStandardItem(tr("Str 6+")),
-     new QStandardItem(tr("Int 7+"))
-   }, {
-     new QStandardItem(tr("Scientist")),
-     new QStandardItem(tr("Edu 6+")),
-     new QStandardItem(tr("Edu 5+")),
-     new QStandardItem(tr("Int 7+")),
-     new QStandardItem(tr("Int 6+"))
-   }, {
-     new QStandardItem(tr("Scout")),
-     new QStandardItem(tr("Int 6+")),
-     new QStandardItem(tr("End 7+")),
-     new QStandardItem(tr("--")),
-     new QStandardItem(tr("--"))
-   }, {
-     new QStandardItem(tr("Surface Defense")),
-     new QStandardItem(tr("End 5+")),
-     new QStandardItem(tr("Edu 5+")),
-     new QStandardItem(tr("End 6+")),
-     new QStandardItem(tr("Edu 7+"))
-   }, {
-     new QStandardItem(tr("Technician")),
-     new QStandardItem(tr("Edu 6+")),
-     new QStandardItem(tr("Dex 4+")),
-     new QStandardItem(tr("Edu 5+")),
-     new QStandardItem(tr("Int 8+"))
-   }};
+  static std::vector<Career> CAREER =
+  {
+    Career(tr("Aerospace Defense"), {Stat::End, 5}, {Stat::Dex, 5}, 5, {Stat::Edu, 6}, {Stat::Edu, 7}),
+    Career(tr("Agent"),             {Stat::Soc, 6}, {Stat::Int, 6}, 6, {Stat::Edu, 7}, {Stat::Edu, 6}),
+    Career(tr("Athlete"),           {Stat::End, 8}, {Stat::Dex, 5}, 6),
+    Career(tr("Barbarian"),         {Stat::End, 5}, {Stat::Str, 6}, 5),
+    Career(tr("Belter"),            {Stat::Int, 4}, {Stat::Dex, 7}, 5),
+    Career(tr("Bureaucrat"),        {Stat::Soc, 6}, {Stat::Edu, 4}, 5, {Stat::Soc, 5}, {Stat::Int, 8}),
+    Career(tr("Colonist"),          {Stat::End, 5}, {Stat::End, 6}, 5, {Stat::Int, 7}, {Stat::Edu, 6}),
+    Career(tr("Diplomat"),          {Stat::Soc, 6}, {Stat::Edu, 5}, 5, {Stat::Int, 7}, {Stat::Soc, 7}),
+    Career(tr("Drifter"),           {Stat::Dex, 5}, {Stat::End, 5}, 5),
+    Career(tr("Entertainer"),       {Stat::Soc, 8}, {Stat::Int, 4}, 6),
+    Career(tr("Hunter"),            {Stat::End, 5}, {Stat::Str, 8}, 6),
+    Career(tr("Marine"),            {Stat::Int, 6}, {Stat::End, 6}, 6, {Stat::Edu, 6}, {Stat::Soc, 7}),
+    Career(tr("Maritime Defense"),  {Stat::End, 5}, {Stat::End, 5}, 5, {Stat::Int, 6}, {Stat::Edu, 7}),
+    Career(tr("Mercenary"),         {Stat::Int, 4}, {Stat::End, 6}, 5, {Stat::Int, 7}, {Stat::Int, 6}),
+    Career(tr("Merchant"),          {Stat::Int, 4}, {Stat::Int, 5}, 4, {Stat::Int, 5}, {Stat::Edu, 8}),
+    Career(tr("Navy"),              {Stat::Int, 6}, {Stat::Int, 5}, 5, {Stat::Soc, 7}, {Stat::Edu, 6}),
+    Career(tr("Noble"),             {Stat::Soc, 8}, {Stat::Soc, 4}, 6, {Stat::Edu, 5}, {Stat::Int, 8}),
+    Career(tr("Physician"),         {Stat::Edu, 6}, {Stat::Int, 4}, 5, {Stat::Int, 5}, {Stat::Edu, 8}),
+    Career(tr("Pirate"),            {Stat::Dex, 5}, {Stat::Dex, 6}, 5, {Stat::Str, 7}, {Stat::Int, 6}),
+    Career(tr("Rogue"),             {Stat::Dex, 5}, {Stat::Dex, 4}, 4, {Stat::Str, 6}, {Stat::Int, 7}),
+    Career(tr("Scientist"),         {Stat::Edu, 6}, {Stat::Edu, 5}, 5, {Stat::Int, 7}, {Stat::Int, 6}),
+    Career(tr("Scout"),             {Stat::Int, 6}, {Stat::End, 7}, 6),
+    Career(tr("Surface Defense"),   {Stat::End, 5}, {Stat::Edu, 5}, 5, {Stat::End, 6}, {Stat::Edu, 7}),
+    Career(tr("Technician"),        {Stat::Edu, 6}, {Stat::Dex, 4}, 5, {Stat::Edu, 5}, {Stat::Int, 8})
+  };
 
-  for(QList<QStandardItem*> list: CAREERS) {
-    model->appendRow(list);
-  }
+  for(Career& career: CAREER)
+    mModel.appendRow(career.GetItems(workspace));
 
-  mUi->careerTableView->setModel(model);
+  mModel.sort(5, Qt::DescendingOrder);
+  mUi->careerTableView->setModel(&mModel);
+  //mUi->careerTableView->hideColumn(5);
   mUi->careerTableView->resizeColumnsToContents();
   mUi->careerTableView->resizeRowsToContents();
 }
@@ -204,14 +92,21 @@ CareerDialog::~CareerDialog()
   delete mUi;
 }
 
-void
-CareerDialog::Select(const QModelIndex&)
+Career*
+CareerDialog::Selected() const
 {
-
+  return nullptr;
 }
 
 void
-CareerDialog::SelectAndAccept(const QModelIndex&)
+CareerDialog::Select(const QModelIndex& index)
+{
+  qDebug() << "Select: " << index;
+  void* ptr = index.internalPointer();
+}
+
+void
+CareerDialog::SelectAndAccept(const QModelIndex& index)
 {
 
 }

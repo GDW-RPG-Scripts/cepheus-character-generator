@@ -20,19 +20,27 @@
  * Character Generator. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "die.hh"
+#ifndef CAREERMODEL_HH
+#define CAREERMODEL_HH
 
-#include <cstdlib>
+#include <QAbstractTableModel>
 
-using namespace Cepheus::Character;
-
-int
-Die::Roll(int number)
+namespace Cepheus
 {
-  int result = 0;
+  namespace Character
+  {
+    class CareerModel : public QAbstractTableModel
+    {
+        Q_OBJECT
 
-  for(int i = 0; i < number; i++)
-    result += rand() % 6 + 1;
+      public:
+        explicit CareerModel(QObject* = nullptr);
 
-  return result;
-}
+      signals:
+
+      public slots:
+    };
+  };
+};
+
+#endif // CAREERMODEL_HH

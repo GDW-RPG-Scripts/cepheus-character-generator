@@ -1,31 +1,35 @@
 /**
- * Cepheus Character Generator, a character generator for the Cepheus Engine
- * and derived RPG systems.
+ * Cepheus Character Generator, an RPG character generator for the Cepheus
+ * Engine and derived RPG systems.
  *
- * Copyright (C) 2019 Michael N. Henry
+ * Copyright (C) 2019 Michael N. Henry <mike.henry@mikehenry.se>
  *
  * This file is part of the Cepheus Character Generator.
  *
- * GDW RPG Vehicles is free software: you can redistribute it and/or modify it under the terms of the
- * GNU General Public License as published by the Free Software Foundation, either version 2 of the
- * License, or (at your option) any later version.
+ * Cepheus Character Generator is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or (at your
+ * option) any later version.
  *
- * GDW RPG Vehicles is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * Cepheus Character Generator is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * See the GNU General Public License for more details. You should have received a copy of the GNU
- * General Public License along with GDW RPG Vehicles. If not, see <http://www.gnu.org/licenses/>.
+ * See the GNU General Public License for more details. You should have
+ * received a copy of the GNU General Public License along with Cepheus
+ * Character Generator. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "workspace.hh"
 #include "ui_workspace.h"
 
+#include "career.hh"
 #include "careerdialog.hh"
 #include "stats.hh"
 
 #include <cstdlib>
 
-using namespace GDW::RPG;
+using namespace Cepheus::Character;
 
 Workspace::Workspace(QWidget *parent)
   : QMainWindow(parent)
@@ -44,6 +48,18 @@ Workspace::~Workspace()
 
   if(mStats)
     delete mStats;
+}
+
+Stats&
+Workspace::GetStats()
+{
+  return *mStats;
+}
+
+const Stats&
+Workspace::GetStats() const
+{
+  return *mStats;
 }
 
 #define MOD(x) ((((x) > 0) ? "+" : "") + QString::number(x))
@@ -75,7 +91,7 @@ Workspace::Roll()
     Log("Noble Title=" + NobleTitle());
   LogBold("Term 0");
 
-  SelectCareer();
+  Career* career = SelectCareer();
 }
 
 QString
@@ -114,14 +130,16 @@ Workspace::NobleTitle() const
   }
 }
 
-void
+Career*
 Workspace::SelectCareer()
 {
   CareerDialog dialog(this);
 
   if(dialog.exec() != CareerDialog::Accepted) {
-    return;
+    return nullptr;
   }
+
+  return dialog.Selected();
 }
 
 void
