@@ -20,54 +20,7 @@
  * Character Generator. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CAREER_HH
-#define CAREER_HH
+#include "skill.hh"
 
-#include "stats.hh"
+using namespace Cepheus::Character;
 
-#include <QString>
-
-class QStandardItem;
-
-namespace Cepheus
-{
-  namespace Character
-  {
-    class Workspace;
-
-    struct Check {
-        Stat stat;
-        int level;
-
-        operator QString() const;
-    };
-
-    class Career
-    {
-      public:
-        Career(const QString, const Check&, const Check&, int);
-        Career(const QString, const Check&, const Check&, int,
-               const Check&, const Check&);
-
-        int QualifyOn(const Stats&) const;
-        int SurviveOn(const Stats&) const;
-
-        const QList<QStandardItem*> GetItems(Workspace*) const;
-
-      private:
-        double Section(int, int) const;
-
-        QString mName;
-        Check mQualify;
-        Check mSurvive;
-
-        bool mHasCommission;
-        Check mCommission;
-        Check mAdvancement;
-
-        int mReEnlistment;
-    };
-  };
-};
-
-#endif // CAREER_HH

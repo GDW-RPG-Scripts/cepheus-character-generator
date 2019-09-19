@@ -20,19 +20,51 @@
  * Character Generator. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "die.hh"
+#ifndef CAREERDIALOG_HH
+#define CAREERDIALOG_HH
 
-#include <cstdlib>
+#include "careermodel.hh"
+#include "character.hh"
 
-using namespace Cepheus::Character;
+#include <QDialog>
+#include <QSortFilterProxyModel>
 
-int
-Die::Roll(int number)
-{
-  int result = 0;
+class QModelIndex;
 
-  for(int i = 0; i < number; i++)
-    result += rand() % 6 + 1;
-
-  return result;
+namespace Ui {
+  class CareerDialog;
 }
+
+namespace Cepheus
+{
+  namespace Character
+  {
+    class Career;
+    class Characteristics;
+
+    class CareerDialog : public QDialog
+    {
+        Q_OBJECT
+
+      public:
+        explicit CareerDialog(const Character&, QWidget* = nullptr);
+        ~CareerDialog();
+
+        const Career* Selected() const;
+
+      private slots:
+        void Select(const QModelIndex&);
+        void SelectAndAccept(const QModelIndex&);
+
+      private:
+        Ui::CareerDialog *mUi;
+
+        const Career* mCareer;
+
+        CareerModel mModel;
+        QSortFilterProxyModel mProxyModel;
+    };
+  };
+};
+
+#endif // CAREERDIALOG_HH

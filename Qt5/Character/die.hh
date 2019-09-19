@@ -23,15 +23,16 @@
 #ifndef DIE_HH
 #define DIE_HH
 
+#include "Character_global.hh"
 
 namespace Cepheus
 {
   namespace Character
   {
-    class Die
+    class CHARACTER_EXPORT Die
     {
       public:
-        static int Roll(int = 2);
+        static int Roll(int = 2, int = 1);
     };
   };
 };

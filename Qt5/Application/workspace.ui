@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Cepheus Character Generator</string>
+   <string>Cepheus Character Creator</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,1">
@@ -35,7 +35,10 @@
       <property name="title">
        <string/>
       </property>
-      <layout class="QGridLayout" name="personalGridLayout" columnstretch="0,0,0" columnminimumwidth="0,0,0">
+      <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,1,0">
+       <property name="spacing">
+        <number>-1</number>
+       </property>
        <property name="leftMargin">
         <number>12</number>
        </property>
@@ -48,16 +51,88 @@
        <property name="bottomMargin">
         <number>12</number>
        </property>
-       <property name="spacing">
-        <number>-1</number>
-       </property>
-       <item row="0" column="0">
+       <item>
+        <layout class="QFormLayout" name="homeUWPFormLayout">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::ExpandingFieldsGrow</enum>
+         </property>
+         <property name="labelAlignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="formAlignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+         <property name="horizontalSpacing">
+          <number>3</number>
+         </property>
+         <property name="verticalSpacing">
+          <number>-1</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="homeUWPLabel">
+           <property name="text">
+            <string>UWP: </string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="homeUWPLineEdit">
+           <property name="minimumSize">
+            <size>
+             <width>144</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>100</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>.SF NS Text</family>
+             <weight>50</weight>
+             <bold>false</bold>
+             <kerning>true</kerning>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>The Universal World Profile for the Character's Home World.
+Enter UWP to unlock any Homeworld Background Skills.</string>
+           </property>
+           <property name="text">
+            <string>C867975-8</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
         <layout class="QFormLayout" name="characterNameFormLayout">
          <property name="fieldGrowthPolicy">
           <enum>QFormLayout::ExpandingFieldsGrow</enum>
          </property>
          <property name="labelAlignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="formAlignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
          </property>
          <property name="horizontalSpacing">
           <number>3</number>
@@ -79,8 +154,17 @@
          </property>
          <item row="0" column="0">
           <widget class="QLabel" name="characterNameLabel">
+           <property name="minimumSize">
+            <size>
+             <width>45</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="text">
-            <string>Character Name: </string>
+            <string>Name: </string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
@@ -92,6 +176,9 @@
              <height>0</height>
             </size>
            </property>
+           <property name="toolTip">
+            <string>The Character's Name</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -99,13 +186,19 @@
          </item>
         </layout>
        </item>
-       <item row="0" column="2">
+       <item>
         <layout class="QFormLayout" name="genderFormLayout">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetDefaultConstraint</enum>
+         </property>
          <property name="fieldGrowthPolicy">
           <enum>QFormLayout::ExpandingFieldsGrow</enum>
          </property>
          <property name="labelAlignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="formAlignment">
+          <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
          </property>
          <property name="horizontalSpacing">
           <number>3</number>
@@ -134,53 +227,20 @@
          </item>
          <item row="0" column="1">
           <widget class="QLineEdit" name="genderLineEdit">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="0" column="1">
-        <layout class="QFormLayout" name="homeUWPFormLayout">
-         <property name="fieldGrowthPolicy">
-          <enum>QFormLayout::ExpandingFieldsGrow</enum>
-         </property>
-         <property name="labelAlignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
-         <property name="horizontalSpacing">
-          <number>3</number>
-         </property>
-         <property name="verticalSpacing">
-          <number>-1</number>
-         </property>
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="homeUWPLabel">
-           <property name="text">
-            <string>Home UWP: </string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="homeUWPLineEdit">
            <property name="minimumSize">
             <size>
-             <width>0</width>
+             <width>79</width>
              <height>0</height>
             </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>79</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>The Character's Gender</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -193,11 +253,11 @@
      </widget>
     </item>
     <item>
-     <widget class="QGroupBox" name="traitGroupBox">
+     <widget class="QGroupBox" name="personaGroupBox">
       <property name="title">
        <string/>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0">
+      <layout class="QHBoxLayout" name="personaHorizontalLayout" stretch="0,1,0">
        <property name="spacing">
         <number>-1</number>
        </property>
@@ -229,18 +289,44 @@
          </property>
          <item row="0" column="0">
           <widget class="QLabel" name="uppLabel">
+           <property name="minimumSize">
+            <size>
+             <width>38</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="text">
             <string>UPP: </string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
           <widget class="QLineEdit" name="uppLineEdit">
+           <property name="minimumSize">
+            <size>
+             <width>144</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="maximumSize">
             <size>
              <width>16777215</width>
              <height>16777215</height>
             </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>.SF NS Text</family>
+             <weight>50</weight>
+             <bold>false</bold>
+             <kerning>true</kerning>
+            </font>
+           </property>
+           <property name="toolTip">
+            <string>The Character's Generated Universal Persona Profile</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -265,13 +351,25 @@
          </property>
          <item row="0" column="0">
           <widget class="QLabel" name="titleLabel">
+           <property name="minimumSize">
+            <size>
+             <width>45</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="text">
             <string>Title: </string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
           <widget class="QLineEdit" name="titleLineEdit">
+           <property name="toolTip">
+            <string>The Character's Title, if Noble.</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -283,7 +381,16 @@
         </layout>
        </item>
        <item>
-        <widget class="QPushButton" name="rollPushButton">
+        <widget class="QPushButton" name="createPushButton">
+         <property name="minimumSize">
+          <size>
+           <width>88</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>Click Here to Roll up a new Character.</string>
+         </property>
          <property name="text">
           <string>Roll</string>
          </property>
@@ -293,15 +400,69 @@
      </widget>
     </item>
     <item>
-     <widget class="QGroupBox" name="progressGroupBox">
+     <widget class="QGroupBox" name="careerGroupBox">
       <property name="title">
        <string/>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <layout class="QHBoxLayout" name="careerHorizontalLayout" stretch="0,0,1,1">
+       <item>
+        <layout class="QFormLayout" name="termFormLayout">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetDefaultConstraint</enum>
+         </property>
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::ExpandingFieldsGrow</enum>
+         </property>
+         <property name="formAlignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+         <property name="horizontalSpacing">
+          <number>3</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="termLabel">
+           <property name="minimumSize">
+            <size>
+             <width>38</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Term:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="termLineEdit">
+           <property name="maximumSize">
+            <size>
+             <width>53</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>The Character's Current Term in all Careers</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
        <item>
         <layout class="QFormLayout" name="ageFormLayout">
          <property name="fieldGrowthPolicy">
           <enum>QFormLayout::ExpandingFieldsGrow</enum>
+         </property>
+         <property name="formAlignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
          </property>
          <property name="horizontalSpacing">
           <number>3</number>
@@ -315,6 +476,15 @@
          </item>
          <item row="0" column="1">
           <widget class="QLineEdit" name="ageLineEdit">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="toolTip">
+            <string>The Caracter's Current Age</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -330,6 +500,9 @@
          <property name="fieldGrowthPolicy">
           <enum>QFormLayout::ExpandingFieldsGrow</enum>
          </property>
+         <property name="formAlignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
          <property name="horizontalSpacing">
           <number>3</number>
          </property>
@@ -338,10 +511,16 @@
            <property name="text">
             <string>Career:</string>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
           </widget>
          </item>
          <item row="0" column="1">
           <widget class="QLineEdit" name="careerLineEdit">
+           <property name="toolTip">
+            <string>The Character's Current Career</string>
+           </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -357,6 +536,9 @@
          <property name="fieldGrowthPolicy">
           <enum>QFormLayout::ExpandingFieldsGrow</enum>
          </property>
+         <property name="formAlignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
          <property name="horizontalSpacing">
           <number>3</number>
          </property>
@@ -369,33 +551,9 @@
          </item>
          <item row="0" column="1">
           <widget class="QLineEdit" name="rankLineEdit">
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           <property name="toolTip">
+            <string>The Characters's Rank in it's Current Career</string>
            </property>
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QFormLayout" name="termFormLayout">
-         <property name="fieldGrowthPolicy">
-          <enum>QFormLayout::ExpandingFieldsGrow</enum>
-         </property>
-         <property name="horizontalSpacing">
-          <number>3</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="termLabel">
-           <property name="text">
-            <string>Term:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="termLineEdit">
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
@@ -410,19 +568,32 @@
      </widget>
     </item>
     <item>
-     <widget class="QGroupBox" name="groupBox">
+     <widget class="QGroupBox" name="progressionGroupBox">
       <property name="minimumSize">
        <size>
         <width>0</width>
         <height>350</height>
        </size>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1">
        <item>
-        <widget class="QListView" name="skillListView"/>
+        <widget class="QListView" name="skillListView">
+         <property name="maximumSize">
+          <size>
+           <width>185</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>The Character's List of Skills</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QTextEdit" name="logTextEdit">
+         <property name="toolTip">
+          <string>The Character's Creation Log.</string>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -446,21 +617,23 @@
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <tabstops>
-  <tabstop>characterNameLineEdit</tabstop>
   <tabstop>homeUWPLineEdit</tabstop>
+  <tabstop>characterNameLineEdit</tabstop>
   <tabstop>genderLineEdit</tabstop>
-  <tabstop>rollPushButton</tabstop>
+  <tabstop>createPushButton</tabstop>
   <tabstop>uppLineEdit</tabstop>
   <tabstop>titleLineEdit</tabstop>
   <tabstop>ageLineEdit</tabstop>
   <tabstop>careerLineEdit</tabstop>
   <tabstop>rankLineEdit</tabstop>
   <tabstop>termLineEdit</tabstop>
+  <tabstop>skillListView</tabstop>
+  <tabstop>logTextEdit</tabstop>
  </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>rollPushButton</sender>
+   <sender>createPushButton</sender>
    <signal>clicked()</signal>
    <receiver>Workspace</receiver>
    <slot>Roll()</slot>

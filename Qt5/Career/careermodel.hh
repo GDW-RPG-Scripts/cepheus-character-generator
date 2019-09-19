@@ -20,12 +20,39 @@
  * Character Generator. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "careermodel.hh"
+#ifndef CAREERMODEL_HH
+#define CAREERMODEL_HH
 
-using namespace Cepheus::Character;
+#include <QAbstractTableModel>
 
-CareerModel::CareerModel(QObject* parent)
-  : QAbstractTableModel(parent)
+#include "career.hh"
+
+namespace Cepheus
 {
+  namespace Character
+  {
+    class Career;
 
-}
+    class CareerModel : public QAbstractTableModel
+    {
+        Q_OBJECT
+
+      public:
+        explicit CareerModel(const Character&, QObject* = nullptr);
+
+        // Header:
+        QVariant headerData(int, Qt::Orientation, int = Qt::DisplayRole) const override;
+
+        // Basic functionality:
+        int rowCount(const QModelIndex& = QModelIndex()) const override;
+        int columnCount(const QModelIndex& = QModelIndex()) const override;
+
+        QVariant data(const QModelIndex&, int = Qt::DisplayRole) const override;
+
+      private:
+        const Character& mStats;
+    };
+  };
+};
+
+#endif // CAREERMODEL_HH

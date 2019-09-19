@@ -20,27 +20,56 @@
  * Character Generator. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CAREERMODEL_HH
-#define CAREERMODEL_HH
+#ifndef WORKSPACE_HH
+#define WORKSPACE_HH
 
-#include <QAbstractTableModel>
+#include "character.hh"
+
+#include <QMainWindow>
+#include <QSortFilterProxyModel>
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class Workspace; }
+QT_END_NAMESPACE
+
+class QTextEdit;
 
 namespace Cepheus
 {
   namespace Character
   {
-    class CareerModel : public QAbstractTableModel
+    class Career;
+
+    class Workspace : public QMainWindow
     {
         Q_OBJECT
 
       public:
-        explicit CareerModel(QObject* = nullptr);
+        Workspace(QWidget* parent = nullptr);
+        ~Workspace();
 
-      signals:
+        Character& GetCharacter();
+        const Character& GetCharacter() const;
 
-      public slots:
+        QString NobleTitle() const;
+
+      private slots:
+        void Roll();
+
+      private:
+        bool BackgroundSkills();
+
+        const Career* DraftOrDrift();
+        const Career* SelectCareer();
+
+        void Log(const QString&) const;
+        void LogBold(const QString&) const;
+
+        Ui::Workspace* mUi;
+
+        Character mCharacter;
+        QSortFilterProxyModel mSortedSkills;
     };
   };
 };
-
-#endif // CAREERMODEL_HH
+#endif // WORKSPACE_HH

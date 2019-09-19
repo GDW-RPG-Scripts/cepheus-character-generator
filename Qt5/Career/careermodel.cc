@@ -20,49 +20,51 @@
  * Character Generator. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WORKSPACE_HH
-#define WORKSPACE_HH
+#include "careermodel.hh"
 
-#include <QMainWindow>
+#include "career.hh"
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class Workspace; }
-QT_END_NAMESPACE
+using namespace Cepheus::Character;
 
-namespace Cepheus
+CareerModel::CareerModel(const Character& stats, QObject* parent)
+  : QAbstractTableModel(parent), mStats(stats)
+{}
+
+QVariant
+CareerModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  namespace Character
+  if(orientation == Qt::Vertical || role != Qt::DisplayRole)
+    return QVariant();
+
+  static const QVariant HEADER[] =
   {
-    class Career;
-    class Stats;
-
-    class Workspace : public QMainWindow
-    {
-        Q_OBJECT
-
-      public:
-        Workspace(QWidget* parent = nullptr);
-        ~Workspace();
-
-        Stats& GetStats();
-        const Stats& GetStats() const;
-
-        QString NobleTitle() const;
-
-      private slots:
-        void Roll();
-
-      private:
-        Career* SelectCareer();
-
-        void Log(const QString&) const;
-        void LogBold(const QString&) const;
-
-        Ui::Workspace* mUi;
-
-        int mAge;
-        Stats* mStats;
-    };
+    tr("Career"),
+    tr("Qualification"),
+    tr("Survival"),
+    tr("Commission"),
+    tr("Advancement"),
+    tr("Match")
   };
-};
-#endif // WORKSPACE_HH
+  return HEADER[section];
+}
+
+int
+CareerModel::rowCount(const QModelIndex& index) const
+{
+  return N_CAREERS;
+}
+
+int
+CareerModel::columnCount(const QModelIndex& index) const
+{
+  return 6;
+}
+
+QVariant
+CareerModel::data(const QModelIndex& index, int role) const
+{
+  if(role != Qt::DisplayRole)
+    return QVariant();
+
+  return Career::Get(CareerCode(index.row()))->GetItem(mStats, index.column());
+}
