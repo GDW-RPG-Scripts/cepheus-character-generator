@@ -38,19 +38,17 @@ namespace Cepheus
         Q_OBJECT
 
       public:
-        static QString Name(Skill);
-
         SkillModel(QObject* = nullptr);
         SkillModel(const SkillModel&, QObject* = nullptr);
         SkillModel& operator=(const SkillModel&);
 
         void Clear();
 
-        int Level(Skill) const;
-        void Level(Skill, int);
+        int Level(SkillCode) const;
+        void Level(SkillCode, int);
 
-        const Skill& At(int) const;
-        bool Contains(Skill) const;
+        const SkillCode& At(int) const;
+        bool Contains(SkillCode) const;
 
 //        const QVector<Skill>& Skills() const;
 //        void Skills(const QVector<Skill>&);
@@ -64,10 +62,8 @@ namespace Cepheus
         QVariant data(const QModelIndex&, int = Qt::DisplayRole) const override;
 
       private:
-        QVector<Skill> mSkill;
-        QHash<Skill, int> mLevel;
-
-        static const QHash<Skill, QString> SKILL;
+        QVector<SkillCode> mSkill;
+        QHash<SkillCode, int> mLevel;
     };
   };
 };

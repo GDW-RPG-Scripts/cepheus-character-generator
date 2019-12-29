@@ -47,7 +47,8 @@ namespace Cepheus
         Q_OBJECT
 
       public:
-        explicit CareerDialog(const Character&, QWidget* = nullptr);
+        explicit CareerDialog(const Character&, const QVector<QString>&,
+                              QWidget* = nullptr);
         ~CareerDialog();
 
         const Career* Selected() const;

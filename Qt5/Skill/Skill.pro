@@ -45,14 +45,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     skill.cc \
+    skillcascadedialog.cc \
     skillmodel.cc
 
 HEADERS += \
     Skill_global.hh \
     skill.hh \
+    skillcascadedialog.hh \
     skillmodel.hh
 
-FORMS +=
+FORMS += \
+  skillcascadedialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

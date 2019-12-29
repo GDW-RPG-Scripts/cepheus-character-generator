@@ -22,16 +22,20 @@
 
 #include "career.hh"
 
+#include "rank.hh"
 #include "die.hh"
 #include "character.hh"
 
+#include <QCoreApplication>
 #include <QStandardItem>
 
 using namespace Cepheus::Character;
 
 Check::operator QString() const
 {
-  return Character::Name(stat) + " " + QString::number(level) + "+";
+  return QCoreApplication::translate("Check", "%1 %2+")
+      .arg(Character::Name(mCharacteristic))
+      .arg(QString::number(mLevel));
 }
 
 Check::operator QVariant() const
@@ -49,10 +53,11 @@ Career::Career()
 {}
 
 Career::Career(const Career& career)
-  : mName(career.mName), mQualify(career.mQualify),
+  : mName(career.mName), mCode(career.mCode), mQualify(career.mQualify),
     mSurvive(career.mSurvive), mHasCommission(career.mHasCommission),
     mCommission(career.mCommission), mAdvancement(career.mAdvancement),
     mReEnlistment(career.mReEnlistment),
+    mBenefits(career.mBenefits),
     mPersonal(career.mPersonal), mService(career.mService),
     mSpecialist(career.mSpecialist), mAdvanced(career.mAdvanced)
 {}
@@ -61,12 +66,14 @@ Career&
 Career::operator=(const Career& career)
 {
   mName = career.mName;
+  mCode = career.mCode;
   mQualify = career.mQualify;
   mSurvive = career.mSurvive;
   mHasCommission = career.mHasCommission;
   mCommission = career.mCommission;
   mAdvancement = career.mAdvancement;
   mReEnlistment = career.mReEnlistment;
+  mBenefits = career.mBenefits;
   mPersonal = career.mPersonal;
   mService = career.mService;
   mSpecialist = career.mSpecialist;
@@ -74,36 +81,52 @@ Career::operator=(const Career& career)
   return *this;
 }
 
-Career::Career(const QString name,
+Career::Career(const QString name, CareerCode code,
                const Check& qualify, const Check& survival, int reenlistment,
                const TrainingTable& personal, const TrainingTable& service,
-               const TrainingTable& specialist, const TrainingTable& advanced)
-  : mName(name), mQualify(qualify), mSurvive(survival),
+               const TrainingTable& specialist, const TrainingTable& advanced,
+               const RankTable& benefits)
+  : mName(name), mCode(code), mQualify(qualify), mSurvive(survival),
     mHasCommission(false), mReEnlistment(reenlistment),
+    mBenefits(benefits),
     mPersonal(personal), mService(service),
     mSpecialist(specialist), mAdvanced(advanced)
 {}
 
-Career::Career(const QString name,
+Career::Career(const QString name, CareerCode code,
                const Check& qualify, const Check& survival, int reenlistment,
                const TrainingTable& personal, const TrainingTable& service,
                const TrainingTable& specialist, const TrainingTable& advanced,
-               const Check& position, const Check& promotion)
-  : mName(name), mQualify(qualify), mSurvive(survival),
-    mHasCommission(true), mCommission(position), mAdvancement(promotion),
-    mReEnlistment(reenlistment),
+               const Check& position, const Check& promotion,
+               const RankTable& benefits)
+  : mName(name), mCode(code), mQualify(qualify), mSurvive(survival),
+    mHasCommission(true), mCommission(position),
+    mAdvancement(promotion), mReEnlistment(reenlistment),
+    mBenefits(benefits),
     mPersonal(personal), mService(service),
     mSpecialist(specialist), mAdvanced(advanced)
 {}
 
 bool
-Career::Qualify(const Character& stats) const
+Career::Roll(const Character& character, const Check& check)
 {
   int roll = Die::Roll();
-  int mod = stats.GetMod(mQualify.stat);
-  int level = mQualify.level;
+  int mod = character.GetMod(check.mCharacteristic);
+  int level = check.mLevel;
 
   return (roll + mod) >= level;
+}
+
+bool
+Career::Qualified(const Character& character) const
+{
+  return Roll(character, mQualify);
+}
+
+bool
+Career::Survived(const Character& character) const
+{
+  return Roll(character, mSurvive);
 }
 
 void
@@ -112,20 +135,66 @@ Career::BasicTraining(Character& character) const
   mService.IncrementAll(character, 0);
 }
 
-int
-Career::QualifyOn(const Character& stats) const
+void
+Career::AddBenefits(Character& character) const
 {
-  return mQualify.level - stats.GetMod(mQualify.stat);
+  mBenefits.AddBenefit(character);
 }
 
 int
-Career::SurviveOn(const Character& stats) const
+Career::QualifyOn(const Character& character) const
 {
-  return mSurvive.level - stats.GetMod(mSurvive.stat);
+  return mQualify.mLevel - character.GetMod(mQualify.mCharacteristic);
+}
+
+int
+Career::SurviveOn(const Character& character) const
+{
+  return mSurvive.mLevel - character.GetMod(mSurvive.mCharacteristic);
+}
+
+int
+Career::ReEnlistment() const
+{
+  return mReEnlistment;
+}
+
+bool
+Career::Commission(Character& character) const
+{
+  if(!mHasCommission || character.Drafted() == 1)
+    return false;
+
+  if(!Roll(character, mCommission))
+    return false;
+
+  character.Rank() = 1;
+  character.Log(tr("Character commissioned as %1")
+                .arg(mBenefits.Name(character.Rank())));
+  AddBenefits(character);
+
+  return true;
+}
+
+bool
+Career::Advance(Character& character) const
+{
+  if(!mHasCommission || character.Rank() == 6)
+    return false;
+
+  if(!Roll(character, mAdvancement))
+    return false;
+
+  character.Rank() += 1;
+  character.Log(tr("Character promoted to %1")
+                .arg(mBenefits.Name(character.Rank())));
+  AddBenefits(character);
+
+  return true;
 }
 
 QVariant
-Career::GetItem(const Character& stats, int index) const
+Career::GetItem(const Character& character, int index) const
 {
   switch (index) {
     case 0:
@@ -145,8 +214,8 @@ Career::GetItem(const Character& stats, int index) const
 
     case 5:
       return
-          QString("%1%").arg(100 * Section(QualifyOn(stats),
-                                           SurviveOn(stats)), 3, 'f', 2);
+          QString("%1%").arg(100 * Section(QualifyOn(character),
+                                           SurviveOn(character)), 3, 'f', 2);
     default:
       return QVariant();
   }
@@ -225,193 +294,287 @@ Career::Name() const
   return mName;
 }
 
+QString
+Career::Rank(int rank) const
+{
+  return mBenefits.Name(rank);
+}
+
+CareerCode
+Career::Code() const
+{
+  return mCode;
+}
+
+const TrainingTable&
+Career::Personal() const
+{
+  return mPersonal;
+}
+
+const TrainingTable&
+Career::Service() const
+{
+  return mService;
+}
+
+const TrainingTable&
+Career::Specialist() const
+{
+  return mSpecialist;
+}
+
+const TrainingTable&
+Career::Advanced() const
+{
+  return mAdvanced;
+}
+
 std::vector<Career>
-Career::CAREER
+Career::CAREER =
 {
   {
-    tr("Aerospace Defense"),
+    tr("Aerospace Defense"), AEROSPACE_DEFENCE,
     {Characteristic::End, 5}, {Characteristic::Dex, 5}, 5,
     {Str, Dex, End, Athletics, MeleeCombat, Vehicle},
     {Mechanics, GunCombat, Gunnery, MeleeCombat, Survival, Aircraft},
     {Comms, Computer, Electronics, Gunnery, Recon, Piloting},
     {Advocate, Gravitics, Jack_of_All_Trades, Medicine, Leadership, Tactics},
-    {Characteristic::Edu, 6}, {Characteristic::Edu, 7}
+    {Characteristic::Edu, 6}, {Characteristic::Edu, 7},
+    {{"Airman", Aircraft},
+     {"Flight Officer"}, {"Flight Lieutenant"}, {"Squadron Leader", Leadership},
+     {"Wing Commander"}, {"Group Captain"}, {"Air Commodore"}}
   },{
-    tr("Agent"),
+    tr("Agent"), AGENT,
     {Characteristic::Soc, 6}, {Characteristic::Int, 6}, 6,
     {Dex, End, Int, Edu, Athletics, Carousing},
     {Admin, Computer, Streetwise, Bribery, Leadership, Vehicle},
     {GunCombat, MeleeCombat, Bribery, Leadership, Recon, Survival},
     {Advocate, Computer, Liaison, Linguistics, Medicine, Leadership},
-    {Characteristic::Edu, 7}, {Characteristic::Edu, 6}
+    {Characteristic::Edu, 7}, {Characteristic::Edu, 6},
+    {{"Agent", Streetwise},
+     {"Special Agent"}, {"Special Agent in Charge"}, {"Unit Chief"},
+     {"Section Chief", Admin}, {"Assistant Director"}, {"Director"}}
   },{
-    tr("Athlete"),
+    tr("Athlete"), ATHLETE,
     {Characteristic::End, 8}, {Characteristic::Dex, 5}, 6,
     {Dex, Int, Edu, Soc, Carousing, MeleeCombat},
     {Athletics, Admin, Carousing, Computer, Gambling, Vehicle},
     {Zero_G, Athletics, Athletics, Computer, Leadership, Gambling},
     {Advocate, Computer, Liaison, Linguistics, Medicine, Sciences},
+    {Athletics}
   },{
-    tr("Barbarian"),
+    tr("Barbarian"), BARBARIAN,
     {Characteristic::End, 5}, {Characteristic::Str, 6}, 5,
     {Str, Dex, End, Int, Athletics, GunCombat},
     {Mechanics, GunCombat, MeleeCombat, Recon, Survival, Animals},
     {GunCombat, Jack_of_All_Trades, MeleeCombat, Recon, Animals, Tactics},
-    {Advocate, Linguistics, Medicine, Leadership, Tactics, Broker}
+    {Advocate, Linguistics, Medicine, Leadership, Tactics, Broker},
+    {MeleeCombat}
   },{
-    tr("Belter"),
+    tr("Belter"), BELTER,
     {Characteristic::Int, 4}, {Characteristic::Dex, 7}, 5,
     {Str, Dex, End, Zero_G, MeleeCombat, Gambling},
     {Comms, Demolitions, GunCombat, Gunnery, PhysicalSciences, Piloting},
     {Zero_G, Computer, Electronics, Prospecting, Sciences, Vehicle},
-    {Advocate, Engineering, Medicine, Navigation, Comms, Tactics}
+    {Advocate, Engineering, Medicine, Navigation, Comms, Tactics},
+    {Zero_G}
   },{
-    tr("Bureaucrat"),
+    tr("Bureaucrat"), BUREAUCRAT,
     {Characteristic::Soc, 6}, {Characteristic::Edu, 4}, 5,
     {Dex, End, Int, Edu, Athletics, Carousing},
     {Admin, Computer, Carousing, Bribery, Leadership, Vehicle},
     {Admin, Computer, Advocate, Leadership, Steward, Vehicle},
     {Advocate, Computer, Liaison, Linguistics, Medicine, Admin},
-    {Characteristic::Soc, 5}, {Characteristic::Int, 8}
+    {Characteristic::Soc, 5}, {Characteristic::Int, 8},
+    {{"Assistant", Admin},
+     {"Clerk"}, {"Supervisor"}, {"Manager"},
+     {"Chief", Advocate}, {"Director"}, {"Minister"}}
   },{
-    tr("Colonist"),
+    tr("Colonist"), COLONIST,
     {Characteristic::End, 5}, {Characteristic::End, 6}, 5,
     {Str, Dex, End, Int, Athletics, GunCombat},
     {Mechanics, GunCombat, Animals, MeleeCombat, Survival, Vehicle},
     {Survival, Electronics, Jack_of_All_Trades, Medicine, Animals, Vehicle},
     {Advocate, Linguistics, Medicine, Liaison, Admin, VeterinaryMedicine},
-    {Characteristic::Int, 7}, {Characteristic::Edu, 6}
+    {Characteristic::Int, 7}, {Characteristic::Edu, 6},
+    {{"Citizen", Survival},
+     {"District Leader"}, {"District Delegate"}, {"Council Advisor", Liaison},
+     {"Councilor"}, {"Lieutenant Governor"}, {"Governor"}}
   },{
-    tr("Diplomat"),
+    tr("Diplomat"), DIPLOMAT,
     {Characteristic::Soc, 6}, {Characteristic::Edu, 5}, 5,
     {Dex, End, Int, Edu, Athletics, Carousing},
     {Admin, Computer, Carousing, Bribery, Liaison, Vehicle},
     {Carousing, Linguistics, Bribery, Liaison, Steward, Vehicle},
     {Advocate, Computer, Liaison, Linguistics, Medicine, Leadership},
-    {Characteristic::Int, 7}, {Characteristic::Soc, 7}
+    {Characteristic::Int, 7}, {Characteristic::Soc, 7},
+    {{"Attaché", Liaison},
+     {"Third Secretary"}, {"Second Secretary"}, {"First Secretary", Admin},
+     {"Counselor"}, {"Minister"}, {"Ambassador"}}
   },{
-    tr("Drifter"),
+    tr("Drifter"), DRIFTER,
     {Characteristic::Dex, 5}, {Characteristic::End, 5}, 5,
     {Str, Dex, End, MeleeCombat, Bribery, Gambling},
     {Streetwise, Mechanics, GunCombat, MeleeCombat, Recon, Vehicle},
     {Electronics, MeleeCombat, Bribery, Streetwise, Gambling, Recon},
-    {Computer, Engineering, Jack_of_All_Trades, Medicine, Liaison, Tactics}
+    {Computer, Engineering, Jack_of_All_Trades, Medicine, Liaison, Tactics},
+    {}
   },{
-    tr("Entertainer"),
+    tr("Entertainer"), ENTERTAINER,
     {Characteristic::Soc, 8}, {Characteristic::Int, 4}, 6,
     {Dex, Int, Edu, Soc, Carousing, MeleeCombat},
     {Athletics, Admin, Carousing, Bribery, Gambling, Vehicle},
     {Computer, Carousing, Bribery, Liaison, Gambling, Recon},
-    {Advocate, Computer, Carousing, Linguistics, Medicine, Sciences}
+    {Advocate, Computer, Carousing, Linguistics, Medicine, Sciences},
+    {Carousing}
   },{
-    tr("Hunter"),
+    tr("Hunter"), HUNTER,
     {Characteristic::End, 5}, {Characteristic::Str, 8}, 6,
     {Str, Dex, End, Int, Athletics, GunCombat},
     {Mechanics, GunCombat, MeleeCombat, Recon, Survival, Vehicle},
     {Admin, Comms, Electronics, Recon, Animals, Vehicle},
-    {Advocate, Linguistics, Medicine, Liaison, Tactics, Animals}
+    {Advocate, Linguistics, Medicine, Liaison, Tactics, Animals},
+    {Survival}
   },{
-    tr("Marine"),
+    tr("Marine"), MARINE,
     {Characteristic::Int, 6}, {Characteristic::End, 6}, 6,
     {Str, Dex, End, Int, Edu, MeleeCombat},
     {Comms, Demolitions, GunCombat, Gunnery, MeleeCombat, BattleDress},
     {Electronics, GunCombat, MeleeCombat, Survival, Recon, Vehicle},
     {Advocate, Computer, Gravitics, Medicine, Navigation, Tactics},
-    {Characteristic::Edu, 6}, {Characteristic::Soc, 7}
+    {Characteristic::Edu, 6}, {Characteristic::Soc, 7},
+    {{"Trooper", Zero_G},
+     {"Lieutenant"}, {"Captain"}, {"Major", Tactics},
+     {"Lt Colonel"}, {"Colonel"}, {"Brigadier"}}
   },{
-    tr("Maritime Defense"),
+    tr("Maritime Defense"), MARITIME_DEFENCE,
     {Characteristic::End, 5}, {Characteristic::End, 5}, 5,
     {Str, Dex, End, Athletics, MeleeCombat, Vehicle},
     {Mechanics, GunCombat, Gunnery, MeleeCombat, Survival, Watercraft},
     {Comms, Electronics, GunCombat, Demolitions, Recon, Watercraft},
     {Advocate, Computer, Jack_of_All_Trades, Medicine, Leadership, Tactics},
-    {Characteristic::Int, 6}, {Characteristic::Edu, 7}
+    {Characteristic::Int, 6}, {Characteristic::Edu, 7},
+    {{"Seaman", Watercraft},
+     {"Ensign"}, {"Lieutenant"}, {"Lt. Commander", Leadership},
+     {"Commander"}, {"Captain"}, {"Admiral"}}
   },{
-    tr("Mercenary"),
+    tr("Mercenary"), MERCENARY,
     {Characteristic::Int, 4}, {Characteristic::End, 6}, 5,
     {Str, Dex, End, Zero_G, MeleeCombat, Gambling},
     {Comms, Mechanics, GunCombat, MeleeCombat, Gambling, BattleDress},
     {Gravitics, GunCombat, Gunnery, MeleeCombat, Recon, Vehicle},
     {Advocate, Engineering, Medicine, Navigation, Sciences, Tactics},
-    {Characteristic::Int, 7}, {Characteristic::Int, 6}
+    {Characteristic::Int, 7}, {Characteristic::Int, 6},
+    {{"Private", GunCombat},
+     {"Lieutenant"}, {"Captain"}, {"Major", Tactics},
+     {"Lt. Colonel"}, {"Colonel"}, {"Brigadier"}}
   },{
-    tr("Merchant"),
+    tr("Merchant"), MERCHANT,
     {Characteristic::Int, 4}, {Characteristic::Int, 5}, 4,
     {Str, Dex, End, Zero_G, MeleeCombat, Steward},
     {Comms, Engineering, GunCombat, MeleeCombat, Broker, Vehicle},
     {Carousing, Gunnery, Jack_of_All_Trades, Medicine, Navigation, Piloting},
     {Advocate, Engineering, Medicine, Navigation, Sciences, Tactics},
-    {Characteristic::Int, 5}, {Characteristic::Edu, 8}
+    {Characteristic::Int, 5}, {Characteristic::Edu, 8},
+    {{"Crewman", Steward},
+     {"Deck Cadet"}, {"Fourth Officer"}, {"Third Officer", Piloting},
+     {"Second Officer"}, {"First Officer"}, {"Captain"}}
   },{
-    tr("Navy"),
+    tr("Navy"), NAVY,
     {Characteristic::Int, 6}, {Characteristic::Int, 5}, 5,
     {Str, Dex, End, Int, Edu, MeleeCombat},
     {Comms, Engineering, GunCombat, Gunnery, MeleeCombat, Vehicle},
     {Gravitics, Jack_of_All_Trades, MeleeCombat, Navigation, Leadership, Piloting},
     {Advocate, Computer, Engineering, Medicine, Navigation, Tactics},
-    {Characteristic::Soc, 7}, {Characteristic::Edu, 6}
+    {Characteristic::Soc, 7}, {Characteristic::Edu, 6},
+    {{"Starman", Zero_G},
+     {"Midshipman"}, {"Lieutenant"}, {"Lt. Commander", Tactics},
+     {"Commander"}, {"Captain"}, {"Commodore"}}
   },{
-    tr("Noble"),
+    tr("Noble"), NOBLE,
     {Characteristic::Soc, 8}, {Characteristic::Soc, 4}, 6,
     {Dex, Int, Edu, Soc, Carousing, MeleeCombat},
     {Athletics, Admin, Carousing, Leadership, Gambling, Vehicle},
     {Computer, Carousing, GunCombat, MeleeCombat, Liaison, Animals},
     {Advocate, Computer, Liaison, Linguistics, Medicine, Sciences},
-    {Characteristic::Edu, 5}, {Characteristic::Int, 8}
+    {Characteristic::Edu, 5}, {Characteristic::Int, 8},
+    {{"Courtier", Carousing},
+     {"Knight"}, {"Baron"}, {"Marquis"},
+     {"Count", Advocate}, {"Duke"}, {"Archduke"}}
   },{
-    tr("Physician"),
+    tr("Physician"), PHYSICIAN,
     {Characteristic::Edu, 6}, {Characteristic::Int, 4}, 5,
     {Str, Dex, End, Int, Edu, GunCombat},
     {Admin, Computer, Mechanics, Medicine, Leadership, Sciences},
     {Computer, Carousing, Electronics, Medicine, Medicine, Sciences},
     {Advocate, Computer, Jack_of_All_Trades, Linguistics, Medicine, Sciences},
-    {Characteristic::Int, 5}, {Characteristic::Edu, 8}
+    {Characteristic::Int, 5}, {Characteristic::Edu, 8},
+    {{"Intern", Medicine},
+     {"Resident"}, {"Senior Resident"}, {"Chief Resident"},
+     {"Attending Physician", Admin}, {"Service Chief"}, {"Hospital Admin"}}
   },{
-    tr("Pirate"),
+    tr("Pirate"), PIRATE,
     {Characteristic::Dex, 5}, {Characteristic::Dex, 6}, 5,
     {Str, Dex, End, MeleeCombat, Bribery, Gambling},
     {Streetwise, Electronics, GunCombat, MeleeCombat, Recon, Vehicle},
     {Zero_G, Comms, Engineering, Gunnery, Navigation, Piloting},
     {Computer, Gravitics, Jack_of_All_Trades, Medicine, Advocate, Tactics},
-    {Characteristic::Str, 7}, {Characteristic::Int, 6}
+    {Characteristic::Str, 7}, {Characteristic::Int, 6},
+    {{"Crewman", Gunnery},
+     {"Corporal"}, {"Lieutenant", Piloting}, {"Lt. Commander"},
+     {"Commander"}, {"Captain"}, {"Commodore"}}
   },{
-    tr("Rogue"),
+    tr("Rogue"), ROGUE,
     {Characteristic::Dex, 5}, {Characteristic::Dex, 4}, 4,
     {Str, Dex, End, MeleeCombat, Bribery, Gambling},
     {Streetwise, Mechanics, GunCombat, MeleeCombat, Recon, Vehicle},
     {Computer, Electronics, Bribery, Broker, Recon, Vehicle},
     {Computer, Gravitics, Jack_of_All_Trades, Medicine, Advocate, Tactics},
-    {Characteristic::Str, 6}, {Characteristic::Int, 7}
+    {Characteristic::Str, 6}, {Characteristic::Int, 7},
+    {{"Independent", Streetwise},
+     {"Associate"}, {"Soldier", GunCombat}, {"Lieutenant"},
+     {"Underboss"}, {"Consigliere"}, {"Boss"}}
   },{
-    tr("Scientist"),
+    tr("Scientist"), SCIENTIST,
     {Characteristic::Edu, 6}, {Characteristic::Edu, 5}, 5,
     {Str, Dex, End, Int, Edu, GunCombat},
     {Admin, Computer, Electronics, Medicine, Bribery, Sciences},
     {Navigation, Admin, Sciences, Sciences, Animals, Vehicle},
     {Advocate, Computer, Jack_of_All_Trades, Linguistics, Medicine, Sciences},
-    {Characteristic::Int, 7}, {Characteristic::Int, 6}
+    {Characteristic::Int, 7}, {Characteristic::Int, 6},
+    {{"Instructor", Sciences},
+     {"Adjunct Professor"}, {"Research Professor"}, {"Assistant Professor", Computer},
+     {"Associate Professor"}, {"Professor"}, {"Distinguished Professor"}}
   },{
-    tr("Scout"),
+    tr("Scout"), SCOUT,
     {Characteristic::Int, 6}, {Characteristic::End, 7}, 6,
     {Str, Dex, End, Edu, Jack_of_All_Trades, MeleeCombat},
     {Comms, Electronics, GunCombat, Gunnery, Recon, Piloting},
     {Engineering, Gunnery, Demolitions, Navigation, Medicine, Vehicle},
-    {Advocate, Computer, Linguistics, Medicine, Navigation, Tactics}
+    {Advocate, Computer, Linguistics, Medicine, Navigation, Tactics},
+    {Piloting}
   },{
-    tr("Surface Defense"),
+    tr("Surface Defense"), SURFACE_DEFENCE,
     {Characteristic::End, 5}, {Characteristic::Edu, 5}, 5,
     {Str, Dex, End, Athletics, MeleeCombat, Vehicle},
     {Mechanics, GunCombat, Gunnery, MeleeCombat, Recon, BattleDress},
     {Comms, Demolitions, GunCombat, MeleeCombat, Survival, Vehicle},
     {Advocate, Computer, Jack_of_All_Trades, Medicine, Leadership, Tactics},
-    {Characteristic::End, 6}, {Characteristic::Edu, 7}
+    {Characteristic::End, 6}, {Characteristic::Edu, 7},
+    {{"Private", GunCombat},
+     {"Lieutenant"}, {"Captain"}, {"Major", Leadership},
+     {"Lt. Colonel"}, {"Colonel"}, {"General"}}
   },{
-    tr("Technician"),
+    tr("Technician"), TECHNICIAN,
     {Characteristic::Edu, 6}, {Characteristic::Dex, 4}, 5,
     {Str, Dex, End, Int, Edu, GunCombat},
     {Admin, Computer, Mechanics, Medicine, Electronics, Sciences},
     {Computer, Electronics, Gravitics, Linguistics, Engineering, Animals},
     {Advocate, Computer, Jack_of_All_Trades, Linguistics, Medicine, Sciences},
-    {Characteristic::Edu, 5}, {Characteristic::Int, 8}
+    {Characteristic::Edu, 5}, {Characteristic::Int, 8},
+    {{"Technician", Computer},
+     {"Team Lead"}, {"Supervisor"}, {"Manager"},
+     {"Director", Admin}, {"Vice-President"}, {"Executive Officer"}}
   }
 };

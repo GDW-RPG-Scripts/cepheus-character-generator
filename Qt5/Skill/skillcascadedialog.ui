@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SkillCascadeDialog</class>
+ <widget class="QDialog" name="SkillCascadeDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>350</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Cascade Skill Dialog</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="1">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" rowspan="2">
+    <widget class="QTreeWidget" name="treeWidget">
+     <property name="autoScroll">
+      <bool>false</bool>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="rootIsDecorated">
+      <bool>true</bool>
+     </property>
+     <property name="itemsExpandable">
+      <bool>true</bool>
+     </property>
+     <attribute name="headerVisible">
+      <bool>false</bool>
+     </attribute>
+     <column>
+      <property name="text">
+       <string>Cascade Skills</string>
+      </property>
+     </column>
+     <item>
+      <property name="text">
+       <string>Animals</string>
+      </property>
+      <property name="toolTip">
+       <string>The various specialties of this skill cover different aspects of animal handling.
+When this skill is received, the character must immediately select one of the
+following: Farming, Riding, Survival, or Veterinary Medicine.</string>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="flags">
+       <set>ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+      </property>
+      <item>
+       <property name="text">
+        <string>Farming</string>
+       </property>
+       <property name="toolTip">
+        <string>The character can grow and harvest crops and raise animals. This also covers
+hydroponic farming and clone harvesting for food production, at sufficiently
+high techlevels.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Riding</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Survival</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Veterinary Medicine</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+     </item>
+     <item>
+      <property name="text">
+       <string>Gun Combat</string>
+      </property>
+      <property name="toolTip">
+       <string>The various specialties of this skill cover different types of ranged personal
+weapons. When this skill is received, the character must immediately select
+one of the following: Archery, Energy Pistol, Energy Rifle, Shotgun,
+Slug Pistol, or Slug Rifle.</string>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="flags">
+       <set>ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+      </property>
+      <item>
+       <property name="text">
+        <string>Archery</string>
+       </property>
+       <property name="toolTip">
+        <string>The character is skilled at using bows and crossbows for hunting or in combat.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Energy Pistol</string>
+       </property>
+       <property name="toolTip">
+        <string>The character is skilled at using advanced pistol-style energy weapons like
+laser pistols and stunners.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Energy RIfle</string>
+       </property>
+       <property name="toolTip">
+        <string>The character is skilled at using advanced energy weapons like laser rifles or
+plasma rifles.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Shotgun</string>
+       </property>
+       <property name="toolTip">
+        <string>The character is skilled at using shotguns.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Slug Pistol</string>
+       </property>
+       <property name="toolTip">
+        <string>The character is skilled at using projectile-based pistols like the body pistol or
+snub pistol.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Slug Rifle</string>
+       </property>
+       <property name="toolTip">
+        <string>The character is skilled at using projectile-based rifle weapons such as the
+autorifle or gauss rifle.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+     </item>
+     <item>
+      <property name="text">
+       <string>Gunnery</string>
+      </property>
+      <property name="toolTip">
+       <string>The various specialties of this skill cover different types of devastating
+weapons commonly used against vehicles, spaceships and ground
+installations. When this skill is received, the character must immediately select
+one of the following: Bay Weapons, Heavy Weapons, Screens, Spinal Mounts,
+or Turret Weapons.</string>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="flags">
+       <set>ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+      </property>
+      <item>
+       <property name="text">
+        <string>Bay Weapons</string>
+       </property>
+       <property name="toolTip">
+        <string>The character is skilled at operating bay weapons on board a ship.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Heavy Weapons</string>
+       </property>
+       <property name="toolTip">
+        <string>The Heavy Weapons skill covers man-portable and larger weapons that cause
+extreme property damage, such as rocket launchers, artillery and plasma
+weapons.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Screens</string>
+       </property>
+       <property name="toolTip">
+        <string>The character is skilled at activating and using a ship’s energy screens like
+nuclear dampers or meson screens.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Spinal Mounts</string>
+       </property>
+       <property name="toolTip">
+        <string>The character is skilled at operating bay or spinal mount weapons on board a
+ship. These weapons can be used against other ships or for planetary
+bombardment or attacks on stationary targets. Spinal mounts will be covered
+in a future supplement.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Turret Weapons</string>
+       </property>
+       <property name="toolTip">
+        <string>The character is skilled at operating turret-mounted weapons on board a ship.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+     </item>
+     <item>
+      <property name="text">
+       <string>Melee Combat</string>
+      </property>
+      <property name="toolTip">
+       <string>The various specialties of this skill cover different types of personal melee
+combat weapons. When this skill is received, the character must immediately
+select one of the following: Natural Weapons, Bludgeoning Weapons, Piercing
+Weapons or Slashing Weapons.</string>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="flags">
+       <set>ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+      </property>
+      <item>
+       <property name="text">
+        <string>Bludgeoning Weapons</string>
+       </property>
+       <property name="toolTip">
+        <string>The character is skilled at using bludgeoning weapons, such as clubs, staffs
+and really big wrenches, in personal combat.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Natural Weapons</string>
+       </property>
+       <property name="toolTip">
+        <string>The character is skilled at using their natural weapons in personal combat.
+Among humans, this includes brawling, martial arts and wrestling.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Piercing Weapons</string>
+       </property>
+       <property name="toolTip">
+        <string>The character is skilled at using piercing and thrusting weapons, such as
+spears and polearms, in personal combat.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Slashing Weapons</string>
+       </property>
+       <property name="toolTip">
+        <string>The character is skilled at using cutting and slashing weapons, such as swords
+and axes, in personal combat.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+     </item>
+     <item>
+      <property name="text">
+       <string>Sciences</string>
+      </property>
+      <property name="toolTip">
+       <string>The various specialties of this skill cover different areas of scientific study.
+When this skill is received, the character must immediately select one of the
+following: Life Sciences, Physical Sciences, Social Sciences, or Space
+Sciences.</string>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="flags">
+       <set>ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+      </property>
+      <item>
+       <property name="text">
+        <string>Life Sciences</string>
+       </property>
+       <property name="toolTip">
+        <string>This skill represents theoretical and practical knowledge derived from the
+scientific study of living organisms. This covers a wide range of related fields,
+such as biochemistry, biology, botany, cybernetics, genetics, physiology and
+psionocology.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Physical Sciences</string>
+       </property>
+       <property name="toolTip">
+        <string>This skill represents theoretical and practical knowledge derived from the
+scientific study of the nature and properties of energy and non-living matter.
+This covers a wide range of related fields, such as chemistry, electronics,
+geology and physics.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Social Sciences</string>
+       </property>
+       <property name="toolTip">
+        <string>This skill represents theoretical and practical knowledge derived from the
+scientific study of sophont society and social relationships. This covers a wide
+range of related fields, such as archeology, economics, history, philosophy,
+psychology and sophontology.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Space Sciences</string>
+       </property>
+       <property name="toolTip">
+        <string>This skill represents theoretical and practical knowledge derived from several
+scientific disciplines that study phenomena occurring in interplanetary and
+interstellar space, and the celestial bodies that exist within that space. This
+covers a wide range of related fields, such as astronomy, cosmology,
+planetology and xenology.</string>
+       </property>
+       <property name="flags">
+        <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+      </item>
+     </item>
+     <item>
+      <property name="text">
+       <string>Vehicle</string>
+      </property>
+      <property name="toolTip">
+       <string>The various specialties of this skill cover different types of planetary
+transportation. When this skill is received, the character must immediately
+select one of the following: Aircraft, Mole, Tracked Vehicle, Watercraft, or
+Wheeled Vehicle.</string>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="flags">
+       <set>ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+      </property>
+      <item>
+       <property name="text">
+        <string>Aircraft</string>
+       </property>
+       <property name="toolTip">
+        <string>The various specialties of this skill cover different types of flying vehicles.
+When this skill is received, the character must immediately select one of the
+following: Airship, Grav Vehicle, Rotor Aircraft or Winged Aircraft.</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="flags">
+        <set>ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+       <item>
+        <property name="text">
+         <string>Grav Vehicle</string>
+        </property>
+        <property name="toolTip">
+         <string>This skill grants the ability to properly maneuver and perform basic, routine
+maintenance on air/rafts and other vehicles that use gravitic technology. Grav
+vehicles have theoretically perfect maneuverability and can hover, but skill
+checks may be necessary when performing high-speed aerobatics.</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Rotor Aircraft</string>
+        </property>
+        <property name="toolTip">
+         <string>This skill grants the ability to properly maneuver and perform basic, routine
+maintenance on helicopters, hovercraft and other similar craft. Rotor aircraft
+can hover but may require skill checks to keep steady in the face of adverse
+environmental conditions.</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Winged Aircraft</string>
+        </property>
+        <property name="toolTip">
+         <string>This skill grants the ability to properly maneuver and perform basic, routine
+maintenance on jets and other airplanes using a lifting body. Winged aircraft
+must keep moving forwards or they will stall and fall out of the sky.</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+        </property>
+       </item>
+      </item>
+      <item>
+       <property name="text">
+        <string>Ground Vehicle</string>
+       </property>
+       <property name="toolTip">
+        <string>The various specialties of this skill cover different types of ground-based
+vehicles. When this skill is received, the character must immediately select one
+of the following: Mole, Tracked Vehicle or Wheeled Vehicle.</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="flags">
+        <set>ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+       <item>
+        <property name="text">
+         <string>Mole</string>
+        </property>
+        <property name="toolTip">
+         <string>This skill grants the ability to properly maneuver and perform basic, routine
+maintenance on vehicles that move through solid matter using drills or other
+earth-moving technologies, like plasma torches or cavitation.</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Tracked Vehicle</string>
+        </property>
+        <property name="toolTip">
+         <string>This skill grants the ability to properly maneuver and perform basic, routine
+maintenance on tanks and other vehicles that move on tracks.</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Wheeled Vehicle</string>
+        </property>
+        <property name="toolTip">
+         <string>This skill grants the ability to properly maneuver and perform basic, routine
+maintenance on automobiles and similar wheeled vehicles.</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+        </property>
+       </item>
+      </item>
+      <item>
+       <property name="text">
+        <string>Watercraft</string>
+       </property>
+       <property name="toolTip">
+        <string>The various specialties of this skill cover different types of watercraft and
+ocean travel. When this skill is received, the character must immediately select
+one of the following: Motorboats, Ocean Ships, Sailing Ships or Submarine.</string>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="flags">
+        <set>ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+       </property>
+       <item>
+        <property name="text">
+         <string>Motorboats</string>
+        </property>
+        <property name="toolTip">
+         <string>This skill grants the ability to properly maneuver and perform basic, routine
+maintenance on small motorized watercraft.</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Ocean Ships</string>
+        </property>
+        <property name="toolTip">
+         <string>This skill grants the ability to properly maneuver and perform basic, routine
+maintenance on large motorized sea-going ships.</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Sailing Ships</string>
+        </property>
+        <property name="toolTip">
+         <string>This skill grants the ability to properly maneuver and perform basic, routine
+maintenance on wind-driven watercraft.</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Submarine</string>
+        </property>
+        <property name="toolTip">
+         <string>This skill grants the ability to properly maneuver and perform basic, routine
+maintenance on vehicles that travel underwater.</string>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+        </property>
+       </item>
+      </item>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>SkillCascadeDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>SkillCascadeDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>treeWidget</sender>
+   <signal>itemSelectionChanged()</signal>
+   <receiver>SkillCascadeDialog</receiver>
+   <slot>Select()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>174</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>174</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>treeWidget</sender>
+   <signal>itemDoubleClicked(QTreeWidgetItem*,int)</signal>
+   <receiver>SkillCascadeDialog</receiver>
+   <slot>SelectAndAccept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>174</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>174</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>Select()</slot>
+  <slot>SelectAndAccept()</slot>
+ </slots>
+</ui>

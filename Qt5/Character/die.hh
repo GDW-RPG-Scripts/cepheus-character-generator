@@ -29,6 +29,8 @@ namespace Cepheus
 {
   namespace Character
   {
+    class Character;
+
     class CHARACTER_EXPORT Die
     {
       public:

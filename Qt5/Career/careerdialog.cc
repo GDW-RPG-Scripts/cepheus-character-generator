@@ -28,13 +28,13 @@
 #include <QPushButton>
 #include <QStringList>
 
-#include <QDebug>
-
 using namespace Cepheus::Character;
 
-CareerDialog::CareerDialog(const Character& stats, QWidget* parent) :
+CareerDialog::CareerDialog(const Character& stats,
+                           const QVector<QString>& previousCareers,
+                           QWidget* parent) :
   QDialog(parent),
-  mUi(new Ui::CareerDialog), mModel(stats, this), mProxyModel(this)
+  mUi(new Ui::CareerDialog), mModel(stats, previousCareers, this), mProxyModel(this)
 {
   mUi->setupUi(this);
 

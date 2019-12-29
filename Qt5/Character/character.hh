@@ -29,6 +29,8 @@
 
 class QTextEdit;
 
+#define MOD(x) ((((x) > 0) ? "+" : "") + QString::number(x))
+
 namespace Cepheus
 {
   namespace Character
@@ -58,9 +60,10 @@ namespace Cepheus
         Character(const Character&);
         Character& operator=(const Character&);
 
-        int& Age() { return mAge; }
-        int& Term() { return mTerm; }
-        bool& Drafted() { return mDrafted; }
+        inline int& Age()     { return mAge;     }
+        inline int& Rank()    { return mRank;    }
+        inline int& Term()    { return mTerm;    }
+        inline int& Drafted() { return mDrafted; }
 
         QString AsUPP() const;
         QString GetUPP(Characteristic) const;
@@ -101,8 +104,9 @@ namespace Cepheus
                   int = std::numeric_limits<int>::max());
 
         int mAge;
+        int mDrafted;
+        int mRank;
         int mTerm;
-        bool mDrafted;
 
         int mChars[N_CHARACTERISTICS];
 

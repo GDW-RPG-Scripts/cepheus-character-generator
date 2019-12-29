@@ -25,6 +25,7 @@
 
 #include "career_global.hh"
 
+#include "rank.hh"
 #include "character.hh"
 #include "skill.hh"
 #include "trainingtable.hh"
@@ -44,8 +45,8 @@ namespace Cepheus
     class Character;
 
     struct CAREER_EXPORT Check {
-        Characteristic stat;
-        int level;
+        Characteristic mCharacteristic;
+        int mLevel;
 
         operator QString() const;
         operator QVariant() const;
@@ -70,30 +71,49 @@ namespace Cepheus
         Career(const Career&);
         Career& operator=(const Career&);
 
-        Career(const QString, const Check&, const Check&, int,
-               const TrainingTable&, const TrainingTable&,
-               const TrainingTable&, const TrainingTable&);
-        Career(const QString, const Check&, const Check&, int,
+        Career(const QString, CareerCode, const Check&, const Check&, int,
                const TrainingTable&, const TrainingTable&,
                const TrainingTable&, const TrainingTable&,
-               const Check&, const Check&);
+               const RankTable&);
+        Career(const QString, CareerCode, const Check&, const Check&, int,
+               const TrainingTable&, const TrainingTable&,
+               const TrainingTable&, const TrainingTable&,
+               const Check&, const Check&, const RankTable&);
 
-        bool Qualify(const Character&) const;
+        bool Qualified(const Character&) const;
+        bool Survived(const Character&) const;
 
         void BasicTraining(Character&) const;
+        void AddBenefits(Character&) const;
 
         int QualifyOn(const Character&) const;
         int SurviveOn(const Character&) const;
+
+        int ReEnlistment() const;
+
+        bool Commission(Character&) const;
+        bool Advance(Character&) const;
 
         QVariant GetItem(const Character&, int) const;
         const QList<QStandardItem*> GetItems(const Character&) const;
 
         QString Name() const;
+        QString Rank(int) const;
+
+        CareerCode Code() const;
+
+        const TrainingTable& Personal() const;
+        const TrainingTable& Service() const;
+        const TrainingTable& Specialist() const;
+        const TrainingTable& Advanced() const;
 
       private:
+        static bool Roll(const Character&, const Check&);
+
         double Section(int, int) const;
 
         QString mName;
+        CareerCode mCode;
 
         Check mQualify;
         Check mSurvive;
@@ -104,6 +124,7 @@ namespace Cepheus
 
         int mReEnlistment;
 
+        RankTable mBenefits;
         TrainingTable mPersonal, mService, mSpecialist, mAdvanced;
 
         static std::vector<Career> CAREER;

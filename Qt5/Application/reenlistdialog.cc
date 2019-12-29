@@ -20,42 +20,50 @@
  * Character Generator. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DRAFTORDRIFTDIALOG_HH
-#define DRAFTORDRIFTDIALOG_HH
+#include "reenlistdialog.hh"
+#include "ui_reenlistdialog.h"
 
-#include <QDialog>
+#include <QPushButton>
 
-namespace Ui {
-  class DraftOrDriftDialog;
+using namespace Cepheus::Character;
+
+ReenlistDialog::ReenlistDialog(QWidget *parent)
+  : QDialog(parent)
+  , mUi(new Ui::ReenlistDialog)
+  , mSelected(std::numeric_limits<int>::max())
+{
+  mUi->setupUi(this);
+  mUi->reenlistButtonGroup->setId(mUi->musterOutBadioButton, 0);
+  mUi->reenlistButtonGroup->setId(mUi->reenlistRadioButton, 1);
+  mUi->reenlistButtonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 }
 
-namespace Cepheus
+ReenlistDialog::~ReenlistDialog()
 {
-  namespace Character
-  {
-    class Career;
+  delete mUi;
+}
 
-    class DraftOrDriftDialog : public QDialog
-    {
-        Q_OBJECT
+bool
+ReenlistDialog::HasSelection() const
+{
+  return mSelected != std::numeric_limits<int>::max();
+}
 
-      public:
-        explicit DraftOrDriftDialog(QWidget* = nullptr);
-        ~DraftOrDriftDialog();
+bool
+ReenlistDialog::MusterOut() const
+{
+  return mSelected == 0;
+}
 
-        bool HasSelection() const;
+bool
+ReenlistDialog::ReEnlist() const
+{
+  return mSelected == 1;
+}
 
-        const Career* GetCareer(int&) const;
-
-      public slots:
-        void Select(int);
-
-      private:
-        Ui::DraftOrDriftDialog* mUi;
-
-        int mSelected;
-    };
-  };
-};
-
-#endif // DRAFTORDRIFTDIALOG_HH
+void
+ReenlistDialog::Select(int id)
+{
+  mSelected = id;
+  mUi->reenlistButtonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+}

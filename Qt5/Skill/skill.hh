@@ -25,11 +25,15 @@
 
 #include "Skill_global.hh"
 
+#include <QCoreApplication>
+#include <QHash>
+#include <QString>
+
 namespace Cepheus
 {
   namespace Character
   {
-    enum SKILL_EXPORT Skill
+    enum SKILL_EXPORT SkillCode
     {
       Admin, Advocate, Athletics,
       BattleDress, Bribery, Broker,
@@ -74,7 +78,32 @@ namespace Cepheus
       Mole, TrackedVehicle, WheeledVehicle,
 
       Watercraft,
-      Motorboats, OceanShips, SailingShips, Submarine
+      Motorboats, OceanShips, SailingShips, Submarine,
+
+      NO_SKILL = 0xFFFF
+    };
+
+    class Skill
+    {
+        Q_DECLARE_TR_FUNCTIONS(Skill)
+
+      public:
+        static SkillCode Cascade(SkillCode);
+
+        static SkillCode Code(QString);
+        static QString Name(SkillCode);
+
+      private:
+        static const struct Map
+        {
+            Map(std::initializer_list<std::pair<SkillCode, QString> >);
+
+            QHash<QString, SkillCode>
+            Remap(std::initializer_list<std::pair<SkillCode, QString> >);
+
+            const QHash<QString, SkillCode> Code;
+            const QHash<SkillCode, QString> Name;
+        } MAP;
     };
   };
 };

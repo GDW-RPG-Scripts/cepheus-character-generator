@@ -53,9 +53,8 @@ HEADERS += \
     die.hh
 
 # Default rules for deployment.
-unix {
-    target.path = /usr/lib
-}
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../Skill/release/ -lSkill

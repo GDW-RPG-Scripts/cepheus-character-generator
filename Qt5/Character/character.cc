@@ -52,7 +52,7 @@ Character::Roll()
 }
 
 Character::Character()
-  : mAge(18), mTerm(0), mDrafted(false),
+  : mAge(18), mDrafted(false), mRank(0), mTerm(0),
     mChars {
       std::numeric_limits<int>::max(),
       std::numeric_limits<int>::max(),
@@ -64,38 +64,44 @@ Character::Character()
       }
 {}
 
-Character::Character(const Character& c)
-  : mAge(18), mTerm(0), mDrafted(false),
+Character::Character(const Character& character)
+  : mAge(character.mAge), mDrafted(character.mDrafted),
+    mRank(character.mRank), mTerm(character.mTerm),
     mChars {
-      c.mChars[Characteristic::Str],
-    c.mChars[Characteristic::Dex],
-    c.mChars[Characteristic::End],
-    c.mChars[Characteristic::Int],
-    c.mChars[Characteristic::Edu],
-    c.mChars[Characteristic::Soc],
-    c.mChars[Characteristic::Psi]
+      character.mChars[Characteristic::Str],
+    character.mChars[Characteristic::Dex],
+    character.mChars[Characteristic::End],
+    character.mChars[Characteristic::Int],
+    character.mChars[Characteristic::Edu],
+    character.mChars[Characteristic::Soc],
+    character.mChars[Characteristic::Psi]
     },
-    mSkills(c.mSkills)
+    mSkills(character.mSkills)
 {}
 
 Character&
-Character::operator=(const Character& stats)
+Character::operator=(const Character& character)
 {
-  mChars[Characteristic::Str] = stats.mChars[Characteristic::Str];
-  mChars[Characteristic::Dex] = stats.mChars[Characteristic::Dex];
-  mChars[Characteristic::End] = stats.mChars[Characteristic::End];
-  mChars[Characteristic::Int] = stats.mChars[Characteristic::Int];
-  mChars[Characteristic::Edu] = stats.mChars[Characteristic::Edu];
-  mChars[Characteristic::Soc] = stats.mChars[Characteristic::Soc];
-  mChars[Characteristic::Psi] = stats.mChars[Characteristic::Psi];
+  mAge = character.mAge;
+  mRank = character.mRank;
+  mTerm = character.mTerm;
+  mDrafted = character.mDrafted;
 
-  mSkills = stats.mSkills;
+  mChars[Characteristic::Str] = character.mChars[Characteristic::Str];
+  mChars[Characteristic::Dex] = character.mChars[Characteristic::Dex];
+  mChars[Characteristic::End] = character.mChars[Characteristic::End];
+  mChars[Characteristic::Int] = character.mChars[Characteristic::Int];
+  mChars[Characteristic::Edu] = character.mChars[Characteristic::Edu];
+  mChars[Characteristic::Soc] = character.mChars[Characteristic::Soc];
+  mChars[Characteristic::Psi] = character.mChars[Characteristic::Psi];
+
+  mSkills = character.mSkills;
 
   return *this;
 }
 
 Character::Character(int str, int dex, int end, int intl, int edu, int soc, int psi)
-  : mAge(18), mTerm(0), mDrafted(false),
+  : mAge(18), mDrafted(false), mRank(0), mTerm(0),
     mChars{str, dex, end, intl, edu, soc, psi}
 {}
 

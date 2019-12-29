@@ -24,6 +24,7 @@
 #include "ui_backgrounddialog.h"
 
 #include "character.hh"
+#include "skillcascadedialog.hh"
 
 #include <QPushButton>
 #include <QDebug>
@@ -100,46 +101,46 @@ BackgroundDialog::AddHomeWorldSkills(const QString& uwp)
   bool vacum = atmos == 0;
 
   if(lawlv <= 6) {
-    mSkill.Level(Skill::GunCombat, 0);
+    mSkill.Level(SkillCode::GunCombat, 0);
   } else if(lawlv <= 9) {
-    mSkill.Level(Skill::MeleeCombat, 0);
+    mSkill.Level(SkillCode::MeleeCombat, 0);
   }
 
-  if(agric) mSkill.Level(Skill::Animals,    0);
-  if(astrd) mSkill.Level(Skill::Zero_G,     0);
-  if(desrt) mSkill.Level(Skill::Survival,   0);
-  if(fluid) mSkill.Level(Skill::Watercraft, 0);
-  if(gardn) mSkill.Level(Skill::Animals,    0);
-  if(hitec) mSkill.Level(Skill::Computer,   0);
-  if(hipop) mSkill.Level(Skill::Streetwise, 0);
-  if(icecp) mSkill.Level(Skill::Zero_G,     0);
-  if(indst) mSkill.Level(Skill::Broker,     0);
-  if(lotec) mSkill.Level(Skill::Survival,   0);
-  if(poor ) mSkill.Level(Skill::Animals,    0);
-  if(rich ) mSkill.Level(Skill::Carousing,  0);
-  if(water) mSkill.Level(Skill::Watercraft, 0);
-  if(vacum) mSkill.Level(Skill::Zero_G,     0);
+  if(agric) mSkill.Level(SkillCode::Animals,    0);
+  if(astrd) mSkill.Level(SkillCode::Zero_G,     0);
+  if(desrt) mSkill.Level(SkillCode::Survival,   0);
+  if(fluid) mSkill.Level(SkillCode::Watercraft, 0);
+  if(gardn) mSkill.Level(SkillCode::Animals,    0);
+  if(hitec) mSkill.Level(SkillCode::Computer,   0);
+  if(hipop) mSkill.Level(SkillCode::Streetwise, 0);
+  if(icecp) mSkill.Level(SkillCode::Zero_G,     0);
+  if(indst) mSkill.Level(SkillCode::Broker,     0);
+  if(lotec) mSkill.Level(SkillCode::Survival,   0);
+  if(poor ) mSkill.Level(SkillCode::Animals,    0);
+  if(rich ) mSkill.Level(SkillCode::Carousing,  0);
+  if(water) mSkill.Level(SkillCode::Watercraft, 0);
+  if(vacum) mSkill.Level(SkillCode::Zero_G,     0);
 }
 
 void
 BackgroundDialog::AddPrimaryEducationSkills()
 {
-  mSkill.Level(Skill::Admin,            0);
-  mSkill.Level(Skill::Advocate,         0);
+  mSkill.Level(SkillCode::Admin,            0);
+  mSkill.Level(SkillCode::Advocate,         0);
   //mSkill.Level(Skill::Animals,          0); // Probably should not be a background skill
-  mSkill.Level(Skill::Carousing,        0);
-  mSkill.Level(Skill::Comms,            0);
-  mSkill.Level(Skill::Computer,         0);
-  mSkill.Level(Skill::Electronics,      0);
-  mSkill.Level(Skill::Engineering,      0);
-  mSkill.Level(Skill::LifeSciences,     0);
-  mSkill.Level(Skill::Linguistics,      0);
-  mSkill.Level(Skill::Mechanics,        0);
-  mSkill.Level(Skill::Medicine,         0);
-  mSkill.Level(Skill::PhysicalSciences, 0);
-  mSkill.Level(Skill::SocialSciences,   0);
-  mSkill.Level(Skill::SpaceSciences,    0);
-  mSkill.Level(Skill::Vehicle,          0); // Replacement for Animals (above)
+  mSkill.Level(SkillCode::Carousing,        0);
+  mSkill.Level(SkillCode::Comms,            0);
+  mSkill.Level(SkillCode::Computer,         0);
+  mSkill.Level(SkillCode::Electronics,      0);
+  mSkill.Level(SkillCode::Engineering,      0);
+  mSkill.Level(SkillCode::LifeSciences,     0);
+  mSkill.Level(SkillCode::Linguistics,      0);
+  mSkill.Level(SkillCode::Mechanics,        0);
+  mSkill.Level(SkillCode::Medicine,         0);
+  mSkill.Level(SkillCode::PhysicalSciences, 0);
+  mSkill.Level(SkillCode::SocialSciences,   0);
+  mSkill.Level(SkillCode::SpaceSciences,    0);
+  mSkill.Level(SkillCode::Vehicle,          0); // Replacement for Animals (above)
 }
 
 void
@@ -163,10 +164,11 @@ BackgroundDialog::GetSelection(Character& character)
 
   for(QModelIndex proxy: indexList) {
     QModelIndex index = mSortedSkill.mapToSource(proxy);
-    Skill skill = mSkill.At(index.row());
+    SkillCode skill = mSkill.At(index.row());
     int level = mSkill.Level(skill);
+    skill = Skill::Cascade(skill);
     character.Skills().Level(skill, level);
-    character.Log(tr("%1 %2").arg(SkillModel::Name(skill)).arg(level));
+    character.Log(tr("%1 %2").arg(Skill::Name(skill)).arg(level));
   }
 
   return indexList.size() > 0;

@@ -23,9 +23,12 @@
 #include "trainingtable.hh"
 
 #include "character.hh"
+#include "die.hh"
 #include "skillmodel.hh"
 
 #include <QCoreApplication>
+
+#
 
 using namespace Cepheus::Character;
 
@@ -53,7 +56,7 @@ TrainingTable::operator=(const TrainingTable& table)
   return *this;
 }
 
-TrainingTable::TrainingTable(Characteristic a, Characteristic b, Characteristic c, Skill d, Skill e, Skill f)
+TrainingTable::TrainingTable(Characteristic a, Characteristic b, Characteristic c, SkillCode d, SkillCode e, SkillCode f)
   : mAttribute {
       new CharacteristicIncrementor(a),
       new CharacteristicIncrementor(b),
@@ -64,7 +67,7 @@ TrainingTable::TrainingTable(Characteristic a, Characteristic b, Characteristic 
       }
 {}
 
-TrainingTable::TrainingTable(Characteristic a, Characteristic b, Characteristic c, Characteristic d, Skill e, Skill f)
+TrainingTable::TrainingTable(Characteristic a, Characteristic b, Characteristic c, Characteristic d, SkillCode e, SkillCode f)
   : mAttribute {
       new CharacteristicIncrementor(a),
       new CharacteristicIncrementor(b),
@@ -76,7 +79,7 @@ TrainingTable::TrainingTable(Characteristic a, Characteristic b, Characteristic 
 {}
 
 TrainingTable::TrainingTable(Characteristic a, Characteristic b, Characteristic c,
-                             Characteristic d, Characteristic e, Skill f)
+                             Characteristic d, Characteristic e, SkillCode f)
   : mAttribute {
       new CharacteristicIncrementor(a),
       new CharacteristicIncrementor(b),
@@ -87,7 +90,7 @@ TrainingTable::TrainingTable(Characteristic a, Characteristic b, Characteristic 
       }
 {}
 
-TrainingTable::TrainingTable(Skill a, Skill b, Skill c, Skill d, Skill e, Skill f)
+TrainingTable::TrainingTable(SkillCode a, SkillCode b, SkillCode c, SkillCode d, SkillCode e, SkillCode f)
   : mAttribute {
       new SkillIncrementor(a),
       new SkillIncrementor(b),
@@ -112,6 +115,22 @@ TrainingTable::IncrementAll(Character& character, int increment) const
   }
 }
 
+void
+TrainingTable::Roll(Character& character) const
+{
+  mAttribute[Die::Roll(1, 0)]->Increment(character);
+}
+
+TrainingTable::operator QString() const
+{
+  QString result;
+  for(int i = 0; i < 6; i++) {
+    result += "\n";
+    result += mAttribute[i]->AsString();
+  }
+  return result;
+}
+
 //
 // -- Incrementor Functions
 //
@@ -129,27 +148,30 @@ TrainingTable::CharacteristicIncrementor::Copy() const
   return new CharacteristicIncrementor(mCharacteristic);
 }
 
+const QString
+TrainingTable::CharacteristicIncrementor::NAME[]
+{
+  tr("Str"), tr("Dex"), tr("End"), tr("Int"), tr("Edu"), tr("Soc"),
+  tr("Psi")
+};
+
 void
 TrainingTable::CharacteristicIncrementor::Increment(Character& character,
                                                     int increment)
 {
-  static const QString NAME[N_CHARACTERISTICS]
-  {
-    QCoreApplication::translate("TrainingTable", "Str"),
-    QCoreApplication::translate("TrainingTable", "Dex"),
-    QCoreApplication::translate("TrainingTable", "End"),
-    QCoreApplication::translate("TrainingTable", "Int"),
-    QCoreApplication::translate("TrainingTable", "Edu"),
-    QCoreApplication::translate("TrainingTable", "Soc"),
-    QCoreApplication::translate("TrainingTable", "Psi")
-  };
-
   int level = character.Get(mCharacteristic);
   character.Set(mCharacteristic, level + increment);
-  character.Log(QCoreApplication::translate("TrainingTable", increment > 0 ? "%1 +%2" : "%1 %2").arg(NAME[mCharacteristic]).arg(increment));
+  character.Log(tr(increment > 0 ? "%1 +%2" : "%1 %2").arg(NAME[mCharacteristic]).arg(increment));
 }
 
-TrainingTable::SkillIncrementor::SkillIncrementor(Skill skill)
+QString
+TrainingTable::CharacteristicIncrementor::AsString() const
+{
+  return QString("+1 %1").arg(NAME[mCharacteristic]);
+}
+
+
+TrainingTable::SkillIncrementor::SkillIncrementor(SkillCode skill)
   : mSkill(skill)
 {}
 
@@ -163,10 +185,18 @@ void
 TrainingTable::SkillIncrementor::Increment(Character& character,
                                            int increment)
 {
-  SkillModel& skillModel = character.Skills();
+  SkillCode skill = Skill::Cascade(mSkill);
+
   int level = 0;
-  if(skillModel.Contains(mSkill))
-    level = skillModel.Level(mSkill);
-  skillModel.Level(mSkill, level + increment);
-  character.Log(QCoreApplication::translate("TrainingTable", increment > 0 ? "%1 +%2" : "%1 %2").arg(SkillModel::Name(mSkill)).arg(increment));
+  SkillModel& skillModel = character.Skills();
+  if(skillModel.Contains(skill))
+    level = skillModel.Level(skill);
+  skillModel.Level(skill, level + increment);
+  character.Log(tr(increment > 0 ? "%1 +%2" : "%1 %2").arg(Skill::Name(skill)).arg(increment));
+}
+
+QString
+TrainingTable::SkillIncrementor::AsString() const
+{
+  return Skill::Name(mSkill);
 }

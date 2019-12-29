@@ -57,7 +57,11 @@ namespace Cepheus
         void Roll();
 
       private:
+        void AgingCheck();
         bool BackgroundSkills();
+        void MusterOut(const Career*);
+        bool ReEnlist(const Career*);
+        void TermSkillsAndTraining(const Career*);
 
         const Career* DraftOrDrift();
         const Career* SelectCareer();
@@ -67,8 +71,11 @@ namespace Cepheus
 
         Ui::Workspace* mUi;
 
+        bool mTerminate;
         Character mCharacter;
         QSortFilterProxyModel mSortedSkills;
+        QVector<QString> mCareers;
+        QHash<QString, int> mCareerLength;
     };
   };
 };

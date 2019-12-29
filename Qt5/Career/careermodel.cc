@@ -26,8 +26,10 @@
 
 using namespace Cepheus::Character;
 
-CareerModel::CareerModel(const Character& stats, QObject* parent)
-  : QAbstractTableModel(parent), mStats(stats)
+CareerModel::CareerModel(const Character& stats,
+                         const QVector<QString>& previousCareers,
+                         QObject* parent)
+  : QAbstractTableModel(parent), mStats(stats), mPreviousCareers(previousCareers)
 {}
 
 QVariant
@@ -67,4 +69,13 @@ CareerModel::data(const QModelIndex& index, int role) const
     return QVariant();
 
   return Career::Get(CareerCode(index.row()))->GetItem(mStats, index.column());
+}
+
+Qt::ItemFlags
+CareerModel::flags(const QModelIndex& index) const
+{
+  if(mPreviousCareers.contains(Career::Get(CareerCode(index.row()))->Name()))
+    return Qt::NoItemFlags;
+
+  return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 }

@@ -26,6 +26,8 @@
 #include "career.hh"
 #include "die.hh"
 
+#include <QPushButton>
+
 using namespace Cepheus::Character;
 
 DraftOrDriftDialog::DraftOrDriftDialog(QWidget* parent)
@@ -36,6 +38,7 @@ DraftOrDriftDialog::DraftOrDriftDialog(QWidget* parent)
   mUi->setupUi(this);
   mUi->selectionButtonGroup->setId(mUi->draftRadioButton, CareerCode::N_CAREERS);
   mUi->selectionButtonGroup->setId(mUi->driftRadioButton, CareerCode::DRIFTER);
+  mUi->dialogButtonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 }
 
 DraftOrDriftDialog::~DraftOrDriftDialog()
@@ -50,7 +53,7 @@ DraftOrDriftDialog::HasSelection() const
 }
 
 const Career*
-DraftOrDriftDialog::GetCareer(bool& drafted) const
+DraftOrDriftDialog::GetCareer(int& drafted) const
 {
   if(mSelected > N_CAREERS)
     return nullptr;
@@ -74,4 +77,5 @@ void
 DraftOrDriftDialog::Select(int id)
 {
   mSelected = id;
+  mUi->dialogButtonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
 }

@@ -29,4 +29,6 @@ SUBDIRS += \
     Career \
     Application
 
-CONFIG += ordered
+Application.depends = Career Character Skill
+Career.depends = Character Skill
+Character.depends = Skill

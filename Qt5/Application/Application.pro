@@ -22,11 +22,12 @@
 #
 # ------------------------------------------------------------------------------
 
-QT       += core gui
+QT       += core widgets svg
+QT       -= gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += printsupport
 
-TARGET = Character
+TARGET = "Cepheus Character Creator"
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -44,41 +45,61 @@ CONFIG += c++11
 CONFIG += lrelease embed_translations
 
 SOURCES += \
+    agingdialog.cc \
     backgrounddialog.cc \
     main.cc \
+    reenlistdialog.cc \
     workspace.cc
 
 HEADERS += \
+    agingdialog.hh \
     backgrounddialog.hh \
+    reenlistdialog.hh \
     workspace.hh
 
 FORMS += \
+    agingdialog.ui \
     backgrounddialog.ui \
+    reenlistdialog.ui \
     workspace.ui
+
+#macx: ICON = icons/sunburst.icns
+#win32: RC_ICONS = icons/sunburst.ico
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+##
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../Career/release/ -lCareer
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../Career/debug/ -lCareer
 else:unix: LIBS += -L$$OUT_PWD/../Career/ -lCareer
 
 INCLUDEPATH += $$PWD/../Career
 DEPENDPATH += $$PWD/../Career
+DEPLOY_LIBPATH += -libpath=$$OUT_PWD/../Career/
 
+##
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../Skill/release/ -lSkill
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../Skill/debug/ -lSkill
 else:unix: LIBS += -L$$OUT_PWD/../Skill/ -lSkill
 
 INCLUDEPATH += $$PWD/../Skill
 DEPENDPATH += $$PWD/../Skill
+DEPLOY_LIBPATH += -libpath=$$OUT_PWD/../Skill/
 
-
+##
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../Character/release/ -lCharacter
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../Character/debug/ -lCharacter
 else:unix: LIBS += -L$$OUT_PWD/../Character/ -lCharacter
 
 INCLUDEPATH += $$PWD/../Character
 DEPENDPATH += $$PWD/../Character
+DEPLOY_LIBPATH += -libpath=$$OUT_PWD/../Character/
+
+##
+CONFIG(release, release|debug) {
+  macx: QMAKE_POST_LINK = $$(QTDIR)/bin/macdeployqt \"$$OUT_PWD/$${TARGET}.app\" $$DEPLOY_LIBPATH
+  win32: QMAKE_POST_LINK = $$(QTDIR)/bin/windeployqt \"$$OUT_PWD/release/$${TARGET}.exe\" $$DEPLOY_LIBPATH
+}

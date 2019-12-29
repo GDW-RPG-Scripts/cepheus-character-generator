@@ -38,7 +38,8 @@ namespace Cepheus
         Q_OBJECT
 
       public:
-        explicit CareerModel(const Character&, QObject* = nullptr);
+        explicit CareerModel(const Character&, const QVector<QString>&,
+                             QObject* = nullptr);
 
         // Header:
         QVariant headerData(int, Qt::Orientation, int = Qt::DisplayRole) const override;
@@ -48,9 +49,10 @@ namespace Cepheus
         int columnCount(const QModelIndex& = QModelIndex()) const override;
 
         QVariant data(const QModelIndex&, int = Qt::DisplayRole) const override;
-
+        Qt::ItemFlags flags(const QModelIndex& index) const override;
       private:
         const Character& mStats;
+        const QVector<QString> mPreviousCareers;
     };
   };
 };

@@ -20,42 +20,55 @@
  * Character Generator. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DRAFTORDRIFTDIALOG_HH
-#define DRAFTORDRIFTDIALOG_HH
+#ifndef ADVANCEMENT_HH
+#define ADVANCEMENT_HH
 
-#include <QDialog>
+#include "career_global.hh"
 
-namespace Ui {
-  class DraftOrDriftDialog;
-}
+#include "skill.hh"
+
+#include <QMetaType>
+#include <QString>
+
+#include <vector>
 
 namespace Cepheus
 {
   namespace Character
   {
-    class Career;
+    class Character;
 
-    class DraftOrDriftDialog : public QDialog
-    {
-        Q_OBJECT
-
+    class CAREER_EXPORT Rank {
       public:
-        explicit DraftOrDriftDialog(QWidget* = nullptr);
-        ~DraftOrDriftDialog();
+        Rank(const QString& = {}, SkillCode = NO_SKILL);
 
-        bool HasSelection() const;
-
-        const Career* GetCareer(int&) const;
-
-      public slots:
-        void Select(int);
+        inline QString GetName() const  { return mName; }
+        inline SkillCode   GetSkill() const { return mSkill; }
 
       private:
-        Ui::DraftOrDriftDialog* mUi;
+        QString mName;
+        SkillCode mSkill;
+    };
 
-        int mSelected;
+    class CAREER_EXPORT RankTable
+    {
+      public:
+        RankTable(SkillCode = NO_SKILL);
+        RankTable(const Rank&,
+                 const Rank&, const Rank&, const Rank&,
+                 const Rank&, const Rank&, const Rank&);
+
+        RankTable(const RankTable&);
+        RankTable& operator=(const RankTable&);
+        ~RankTable();
+
+        void AddBenefit(Character&) const;
+        QString Name(int) const;
+
+      private:
+        std::vector<Rank> mRanks;
     };
   };
 };
 
-#endif // DRAFTORDRIFTDIALOG_HH
+#endif // ADVANCEMENT_HH

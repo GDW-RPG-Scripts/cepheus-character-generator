@@ -20,42 +20,41 @@
  * Character Generator. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DRAFTORDRIFTDIALOG_HH
-#define DRAFTORDRIFTDIALOG_HH
+#ifndef REENLISTDIALOG_HH
+#define REENLISTDIALOG_HH
 
 #include <QDialog>
 
 namespace Ui {
-  class DraftOrDriftDialog;
+  class ReenlistDialog;
 }
 
 namespace Cepheus
 {
   namespace Character
   {
-    class Career;
-
-    class DraftOrDriftDialog : public QDialog
+    class ReenlistDialog : public QDialog
     {
         Q_OBJECT
 
       public:
-        explicit DraftOrDriftDialog(QWidget* = nullptr);
-        ~DraftOrDriftDialog();
+        explicit ReenlistDialog(QWidget* = nullptr);
+        ~ReenlistDialog();
 
         bool HasSelection() const;
 
-        const Career* GetCareer(int&) const;
+        bool MusterOut() const;
+        bool ReEnlist() const;
 
       public slots:
         void Select(int);
 
-      private:
-        Ui::DraftOrDriftDialog* mUi;
+        private:
+        Ui::ReenlistDialog* mUi;
 
         int mSelected;
     };
   };
 };
 
-#endif // DRAFTORDRIFTDIALOG_HH
+#endif // REENLISTDIALOG_HH

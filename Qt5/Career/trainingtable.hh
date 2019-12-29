@@ -37,6 +37,8 @@ namespace Cepheus
 
     class CAREER_EXPORT TrainingTable
     {
+        Q_DECLARE_TR_FUNCTIONS(Skill)
+
       public:
         TrainingTable();
         TrainingTable(const TrainingTable&);
@@ -44,14 +46,17 @@ namespace Cepheus
         ~TrainingTable();
 
         TrainingTable(Characteristic, Characteristic, Characteristic,
-                      Skill, Skill, Skill);
+                      SkillCode, SkillCode, SkillCode);
         TrainingTable(Characteristic, Characteristic, Characteristic,
-                      Characteristic, Skill, Skill);
+                      Characteristic, SkillCode, SkillCode);
         TrainingTable(Characteristic, Characteristic, Characteristic,
-                      Characteristic, Characteristic, Skill);
-        TrainingTable(Skill, Skill, Skill, Skill, Skill, Skill);
+                      Characteristic, Characteristic, SkillCode);
+        TrainingTable(SkillCode, SkillCode, SkillCode, SkillCode, SkillCode, SkillCode);
 
         void IncrementAll(Character&, int = 1) const;
+        void Roll(Character&) const;
+
+        operator QString() const;
 
       private:
         class AttributeIncrementor
@@ -60,6 +65,7 @@ namespace Cepheus
             virtual ~AttributeIncrementor();
             virtual AttributeIncrementor* Copy() const = 0;
             virtual void Increment(Character&, int = 1) = 0;
+            virtual QString AsString() const = 0;
         };
 
         class CharacteristicIncrementor : public AttributeIncrementor
@@ -68,20 +74,24 @@ namespace Cepheus
             CharacteristicIncrementor(Characteristic);
             CharacteristicIncrementor* Copy() const override;
             void Increment(Character&, int = 1) override;
+            QString AsString() const override;
 
           private:
             Characteristic mCharacteristic;
+
+            static const QString NAME[N_CHARACTERISTICS];
         };
 
         class SkillIncrementor : public AttributeIncrementor
         {
           public:
-            SkillIncrementor(Skill);
+            SkillIncrementor(SkillCode);
             SkillIncrementor* Copy() const override;
-            virtual void Increment(Character&, int = 1) override;
+            void Increment(Character&, int = 1) override;
+            QString AsString() const override;
 
           private:
-            Skill mSkill;
+            SkillCode mSkill;
         };
 
         AttributeIncrementor* mAttribute[6];

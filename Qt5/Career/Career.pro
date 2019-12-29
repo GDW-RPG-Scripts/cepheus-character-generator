@@ -22,7 +22,7 @@
 #
 # ------------------------------------------------------------------------------
 
-QT       += core widgets
+QT += core widgets
 
 TEMPLATE = lib
 DEFINES += CAREER_LIBRARY
@@ -48,7 +48,9 @@ SOURCES += \
     career.cc \
     careerdialog.cc \
     careermodel.cc \
-    trainingtable.cc
+    rank.cc \
+    trainingtable.cc \
+    trainingtabledialog.cc
 
 HEADERS += \
     career_global.hh \
@@ -56,11 +58,14 @@ HEADERS += \
     career.hh \
     careerdialog.hh \
     careermodel.hh \
-    trainingtable.hh
+    rank.hh \
+    trainingtable.hh \
+    trainingtabledialog.hh
 
 FORMS += \
     careerdialog.ui \
-    draftordriftdialog.ui
+    draftordriftdialog.ui \
+    trainingtabledialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
